@@ -1,8 +1,33 @@
-<h1>F-Rad Home (Dashboard)</h1>
-<p>Congrats, you're recognized as paid or logged in. Access your fellowship tips here.</p>
-<ul>
-  <li>Rhodes Scholarship</li>
-  <li>Marshall Scholarship</li>
-  <li>Gates-Cambridge Scholarship</li>
-  <li>Churchill Scholarship</li>
-</ul>
+<div class="dashboard">
+  <h1>Welcome to Your Fellowship Dashboard</h1>
+  <p>Hello <%= session[:user_email] %>! Access your fellowship resources below.</p>
+
+  <div class="fellowship-modules">
+    <div class="module">
+      <h2>Rhodes Scholarship</h2>
+      <ul>
+        <li>Application Timeline</li>
+        <li>Essay Writing Guide</li>
+        <li>Interview Preparation</li>
+      </ul>
+    </div>
+
+    <div class="module">
+      <h2>Marshall Scholarship</h2>
+      <ul>
+        <li>Selection Criteria</li>
+        <li>University Selection</li>
+        <li>Personal Statement Tips</li>
+      </ul>
+    </div>
+
+    <div class="module">
+      <h2>Gates Cambridge</h2>
+      <ul>
+        <li>Research Proposal Guide</li>
+        <li>Reference Letters</li>
+        <li>Interview Strategy</li>
+      </ul>
+    </div>
+  </div>
+</div>

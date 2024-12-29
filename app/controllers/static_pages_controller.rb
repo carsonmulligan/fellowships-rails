@@ -9,17 +9,18 @@ class StaticPagesController < ApplicationController
   def product
   end
 
-  # Show a "Home" page if user has paid or is recognized (we'll do a simple check)
+  # Show a "Home" page if user has paid or is recognized
   def home
-    # Suppose we check Payment table for "status='succeeded'" with user_id from session
-    if !session[:user_id]
+    unless session[:user_id]
       redirect_to root_path, notice: "Please sign in first"
       return
     end
 
     @payments = Payment.where(user_id: session[:user_id], status: 'succeeded')
+    
     if @payments.empty?
-      redirect_to product_path, alert: "You haven't paid yet"
+      redirect_to product_path, alert: "Please purchase access to continue"
+      return
     end
   end
 
