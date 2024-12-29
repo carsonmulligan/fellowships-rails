@@ -1,0 +1,83 @@
+<!-- Filter Bar -->
+<div class="filter-bar">
+  <div class="filter-groups">
+    <% Scholarship.tag_counts.each do |tag, count| %>
+      <button class="filter-btn" data-tag="<%= tag %>">
+        <%= tag.titleize %> (<%= count %>)
+      </button>
+    <% end %>
+    <button class="close-filters-btn">Close filters</button>
+  </div>
+</div>
+
+<!-- Scholarship Grid -->
+<div class="scholarship-grid">
+  <% @scholarships.each do |scholarship| %>
+    <div class="scholarship-card" data-tags="<%= scholarship.tags.join(' ') %>">
+      <div class="card-header">
+        <h3><%= scholarship.name %></h3>
+        <div class="due-date">Due: <%= scholarship.due_date %></div>
+      </div>
+      
+      <div class="card-body">
+        <p><%= truncate(scholarship.description, length: 150) %></p>
+      </div>
+
+      <div class="card-footer">
+        <div class="tags">
+          <% scholarship.tags.each do |tag| %>
+            <span class="tag"><%= tag.titleize %></span>
+          <% end %>
+        </div>
+        <a href="<%= scholarship.url %>" target="_blank" class="apply-btn">Learn More</a>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<%= javascript_tag do %>
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const scholarshipCards = document.querySelectorAll('.scholarship-card');
+    const closeFiltersBtn = document.querySelector('.close-filters-btn');
+    let activeFilters = new Set();
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const tag = this.dataset.tag;
+        
+        if (activeFilters.has(tag)) {
+          activeFilters.delete(tag);
+          this.classList.remove('active');
+        } else {
+          activeFilters.add(tag);
+          this.classList.add('active');
+        }
+
+        filterScholarships();
+      });
+    });
+
+    closeFiltersBtn.addEventListener('click', function() {
+      activeFilters.clear();
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      filterScholarships();
+    });
+
+    function filterScholarships() {
+      scholarshipCards.forEach(card => {
+        if (activeFilters.size === 0) {
+          card.style.display = 'block';
+          return;
+        }
+
+        const cardTags = card.dataset.tags.split(' ');
+        const hasAllActiveTags = Array.from(activeFilters).every(tag => 
+          cardTags.includes(tag)
+        );
+
+        card.style.display = hasAllActiveTags ? 'block' : 'none';
+      });
+    }
+  });
+<% end %> 

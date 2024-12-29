@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_12_29_205108) do
+ActiveRecord::Schema[7.2].define(version: 2024_12_29_211257) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,5 +21,17 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_29_205108) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "scholarships", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "url"
+    t.string "due_date"
+    t.integer "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "tags", default: [], array: true
+    t.index ["tags"], name: "index_scholarships_on_tags", using: :gin
   end
 end

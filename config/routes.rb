@@ -17,4 +17,6 @@ Rails.application.routes.draw do
   # OmniAuth callback routes
   get '/auth/:provider/callback', to: 'sessions#omniauth'
   get '/auth/failure', to: redirect('/')
+
+  resources :scholarships, only: [:index]
 end
