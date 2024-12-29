@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   # Product page
   get "/product", to: "static_pages#product"
 
-  # Home page (post-subscription or after payment)
-  get "/home", to: "static_pages#home"
+  # Home page (post-subscription or after payment) - now shows scholarships
+  get "/home", to: "scholarships#index"
 
   # Stripe webhook endpoint
   post "/stripe/webhook", to: "stripe#webhook"
@@ -18,5 +18,6 @@ Rails.application.routes.draw do
   get '/auth/:provider/callback', to: 'sessions#omniauth'
   get '/auth/failure', to: redirect('/')
 
+  # Additional scholarship routes if needed
   resources :scholarships, only: [:index]
 end
