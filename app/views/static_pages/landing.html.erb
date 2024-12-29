@@ -1,8 +1,137 @@
-<h1>F-Rad Fellowship Planner</h1>
-<p>Welcome to F-Rad. Win major grad fellowships like Rhodes, etc. Long Scroll, multiple CTAs.</p>
+<div class="landing-container">
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Fellowships4You 🎓</h1>
+    <h2>The Complete Guide to Graduate Fellowships</h2>
+    <p class="subtitle">Interactive Fellowship Lessons & Timeline 📚</p>
+    
+    <div class="cta-buttons">
+      <%= form_tag '/auth/google_oauth2', method: :post, data: { turbo: false } do %>
+        <%= button_tag '🔑 Sign in with Google', class: 'google-signin-btn' %>
+      <% end %>
+      <%= link_to '💫 Buy $99', product_path, class: 'buy-btn' %>
+    </div>
+  </section>
 
-<%= form_tag '/auth/google_oauth2', method: :post, data: { turbo: false } do %>
-  <%= button_tag 'Sign in with Google', class: 'google-signin-btn' %>
-<% end %>
+  <!-- Why Fellowships Section -->
+  <section class="why-fellowships">
+    <h2>Why Learn About Graduate Fellowships? 🤔</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <h3>🎯 Dream Program Funding</h3>
+        <p>Secure funding for your ideal graduate program</p>
+      </div>
+      <div class="benefit-card">
+        <h3>🌍 Global Network</h3>
+        <p>Build connections and transform your career path</p>
+      </div>
+      <div class="benefit-card">
+        <h3>🏛️ Top Universities</h3>
+        <p>Study at Oxford, Cambridge, or worldwide institutions</p>
+      </div>
+    </div>
+  </section>
 
-<%= link_to 'Buy $99', product_path, class: 'buy-btn' %>
+  <!-- What You'll Learn Section -->
+  <section class="learning-outcomes">
+    <h2>With Fellowships4You, You'll Learn: 📝</h2>
+    <ul class="outcomes-list">
+      <li>🔍 Explore major fellowship opportunities</li>
+      <li>📋 Prepare compelling applications</li>
+      <li>⚡ Execute winning strategies</li>
+      <li>📈 Maximize your ROI</li>
+    </ul>
+  </section>
+
+  <!-- ROI Section -->
+  <section class="roi-section">
+    <h2>Return on Investment 💰</h2>
+    <div class="roi-stats">
+      <div class="stat-card">
+        <h3>$50k - $200k</h3>
+        <p>Typical fellowship value</p>
+      </div>
+      <div class="stat-card">
+        <h3>∞</h3>
+        <p>Career impact potential</p>
+      </div>
+      <div class="stat-card">
+        <h3>30 Days</h3>
+        <p>Money-back guarantee</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Course Modules -->
+  <section class="course-modules">
+    <h2>Interactive Course Modules 📚</h2>
+    <div class="module-grid">
+      <div class="module-card">
+        <h3>🔍 Explore</h3>
+        <ul>
+          <li>Identify passions</li>
+          <li>Match fellowships</li>
+          <li>Check eligibility</li>
+        </ul>
+      </div>
+      <div class="module-card">
+        <h3>📋 Prepare</h3>
+        <ul>
+          <li>Build strong profile</li>
+          <li>Craft essays</li>
+          <li>Secure references</li>
+        </ul>
+      </div>
+      <div class="module-card">
+        <h3>⚡ Execute</h3>
+        <ul>
+          <li>Polish applications</li>
+          <li>Mock interviews</li>
+          <li>Meet deadlines</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <h2>What Fellows Say 💬</h2>
+    <div class="testimonial-grid">
+      <blockquote>
+        <p>"I used Fellowships4You to land the Marshall Scholarship. The ROI was unbelievable."</p>
+        <footer>— A. Student 🎓</footer>
+      </blockquote>
+      <blockquote>
+        <p>"Before this, I was lost about deadlines and personal statements. Now, I got fully funded to Oxford!"</p>
+        <footer>— B. Graduate 🌟</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <h2>Frequently Asked Questions ❓</h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h3>Do I need to be an academic superstar? 🤓</h3>
+        <p>Not always! Many fellowships look for leadership, service, and unique experiences.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Is there a refund policy? 💯</h3>
+        <p>Absolutely. If you're not satisfied within 30 days, we'll refund you 100%.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta">
+    <h2>Ready to Start Your Fellowship Journey? 🚀</h2>
+    <p class="price-tag">One-time payment of $99 for lifetime access</p>
+    <div class="cta-buttons">
+      <%= form_tag '/auth/google_oauth2', method: :post, data: { turbo: false } do %>
+        <%= button_tag '🔑 Sign in with Google', class: 'google-signin-btn' %>
+      <% end %>
+      <%= link_to '💫 Buy Now - 60% Off', product_path, class: 'buy-btn highlight' %>
+    </div>
+  </section>
+</div>

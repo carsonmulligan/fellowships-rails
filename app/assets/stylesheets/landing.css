@@ -1,0 +1,238 @@
+/* Landing Page Styles */
+.landing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 4rem 0;
+  background: linear-gradient(135deg, #f6f8ff 0%, #f0f4ff 100%);
+  border-radius: 1rem;
+  margin-bottom: 4rem;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.hero h2 {
+  font-size: 2rem;
+  color: #2d2d2d;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: #4a4a4a;
+  margin-bottom: 2rem;
+}
+
+/* CTA Buttons */
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.google-signin-btn, .buy-btn {
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.google-signin-btn {
+  background-color: #ffffff;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.buy-btn {
+  background-color: #4f46e5;
+  color: white;
+  text-decoration: none;
+}
+
+.buy-btn.highlight {
+  background-color: #4338ca;
+  transform: scale(1.05);
+}
+
+.google-signin-btn:hover, .buy-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Benefits Grid */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.benefit-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Section Styles */
+section {
+  margin-bottom: 4rem;
+  padding: 2rem;
+  border-radius: 1rem;
+}
+
+section h2 {
+  font-size: 2.5rem;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* ROI Stats */
+.roi-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  text-align: center;
+}
+
+.stat-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.stat-card h3 {
+  font-size: 2rem;
+  color: #4f46e5;
+  margin-bottom: 0.5rem;
+}
+
+/* Course Modules */
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.module-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.module-card h3 {
+  color: #4f46e5;
+  margin-bottom: 1rem;
+}
+
+.module-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.module-card li {
+  margin-bottom: 0.5rem;
+  color: #4a4a4a;
+}
+
+/* Testimonials */
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+blockquote {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  margin: 0;
+}
+
+blockquote p {
+  font-style: italic;
+  color: #4a4a4a;
+  margin-bottom: 1rem;
+}
+
+blockquote footer {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* FAQ */
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.faq-item {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.faq-item h3 {
+  color: #4f46e5;
+  margin-bottom: 1rem;
+}
+
+/* Final CTA */
+.final-cta {
+  text-align: center;
+  background: linear-gradient(135deg, #f6f8ff 0%, #f0f4ff 100%);
+  padding: 4rem 2rem;
+}
+
+.price-tag {
+  font-size: 1.25rem;
+  color: #4a4a4a;
+  margin-bottom: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero h2 {
+    font-size: 1.5rem;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+  }
+  
+  section {
+    padding: 1rem;
+  }
+  
+  section h2 {
+    font-size: 2rem;
+  }
+} 
