@@ -3,7 +3,7 @@
   <div class="filter-groups">
     <% Scholarship.tag_counts.each do |tag, count| %>
       <button class="filter-btn" data-tag="<%= tag %>">
-        <%= tag.titleize %> (<%= count %>)
+        <%= get_emoji(tag) %> <%= tag.titleize %> (<%= count %>)
       </button>
     <% end %>
     <button class="close-filters-btn">Close filters</button>
@@ -26,7 +26,7 @@
       <div class="card-footer">
         <div class="tags">
           <% scholarship.tags.each do |tag| %>
-            <span class="tag"><%= tag.titleize %></span>
+            <span class="tag"><%= get_emoji(tag) %> <%= tag.titleize %></span>
           <% end %>
         </div>
         <a href="<%= scholarship.url %>" target="_blank" class="apply-btn">Learn More</a>

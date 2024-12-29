@@ -22,6 +22,9 @@
   cursor: pointer;
   font-size: 0.9rem;
   transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .filter-btn:hover {
@@ -111,6 +114,9 @@
   color: #1976d2;
   border-radius: 12px;
   font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .apply-btn {
