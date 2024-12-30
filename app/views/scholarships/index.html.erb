@@ -46,7 +46,7 @@
 
 <%= javascript_tag do %>
   document.addEventListener('DOMContentLoaded', function() {
-    const stripe = Stripe('<%= Rails.application.credentials.stripe[:publishable_key] %>');
+    const stripe = Stripe('<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>');
     const modal = document.getElementById('premium-features-modal');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const scholarshipCards = document.querySelectorAll('.scholarship-card');

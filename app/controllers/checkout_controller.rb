@@ -1,4 +1,6 @@
 class CheckoutController < ApplicationController
+  before_action :initialize_stripe
+
   def create
     # Create a new Stripe checkout session
     session = Stripe::Checkout::Session.create({
@@ -42,6 +44,10 @@ class CheckoutController < ApplicationController
   end
 
   private
+
+  def initialize_stripe
+    Stripe.api_key = ENV['STRIPE_SECRET_KEY']
+  end
 
   def success_url
     checkout_success_url
