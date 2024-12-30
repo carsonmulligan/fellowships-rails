@@ -8,6 +8,20 @@
   <div class="modal-content">
     <button class="modal-close" onclick="closeModal()">×</button>
     
+    <div class="email-section">
+      <h2>Fellows Membership</h2>
+      <p class="one-time">One-time payment. Then never again.</p>
+      <div class="pricing">
+        <span class="original-price">$200.00</span>
+        <span class="discount-badge">50% OFF</span>
+        <span class="final-price">$100.00</span>
+      </div>
+      <input type="email" id="premium-email" class="email-input" placeholder="Enter your email...">
+      <button onclick="handleJoinFellows()" class="join-button">
+        Join Fellows →
+      </button>
+    </div>
+
     <div class="modal-sections">
       <div class="testimonials-section">
         <h2>What Our Users Say</h2>
@@ -27,25 +41,6 @@
           <p>"The tracking features made managing multiple applications so much easier."</p>
           <cite>- James L., Oxford '22</cite>
         </div>
-      </div>
-
-      <div class="membership-section">
-        <h2>Fellows Membership</h2>
-        <p class="one-time">One-time payment. Then never again.</p>
-        
-        <div class="pricing">
-          <span class="original-price">$200.00</span>
-          <span class="discount-badge">50% OFF</span>
-          <span class="final-price">$100.00</span>
-        </div>
-
-        <div class="email-section">
-          <input type="email" id="premium-email" class="email-input" placeholder="Enter your email...">
-        </div>
-
-        <button onclick="handleJoinFellows()" class="join-button">
-          Join Fellows →
-        </button>
       </div>
     </div>
   </div>
@@ -186,16 +181,33 @@
 }
 
 .email-section {
-  margin: 1.5rem 0;
+  text-align: center;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.email-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
 }
 
 .email-input {
   width: 100%;
   max-width: 300px;
-  padding: 0.75rem 1rem;
-  border: 1px solid #ddd;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 2px solid #ddd;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  transition: border-color 0.2s;
+}
+
+.email-input:focus {
+  border-color: #28a745;
+  outline: none;
 }
 
 .join-button {
@@ -207,6 +219,7 @@
   font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.2s;
+  margin-top: 1rem;
 }
 
 .join-button:hover {
