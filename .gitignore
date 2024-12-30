@@ -10,7 +10,7 @@
 # Ignore all environment files (except templates).
 /.env*
 !/.env*.erb
-
+config/initializers/devise.rb
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
