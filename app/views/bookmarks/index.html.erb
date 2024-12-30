@@ -1,0 +1,53 @@
+<h1>My Bookmarked Scholarships</h1>
+
+<div class="scholarship-grid">
+  <% @bookmarked_scholarships.each do |scholarship| %>
+    <div class="scholarship-card" data-tags="<%= scholarship.tags.join(' ') %>">
+      <div class="card-header">
+        <h3><%= scholarship.name %></h3>
+        <div class="due-date">Due: <%= scholarship.due_date %></div>
+      </div>
+      
+      <div class="card-body">
+        <p><%= truncate(scholarship.description, length: 150) %></p>
+      </div>
+
+      <div class="card-footer">
+        <div class="tags">
+          <% scholarship.tags.each do |tag| %>
+            <span class="tag"><%= get_emoji(tag) %> <%= tag.titleize %></span>
+          <% end %>
+        </div>
+        <div class="action-buttons">
+          <button class="bookmark-btn active" data-scholarship-id="<%= scholarship.id %>">
+            ★ Bookmarked
+          </button>
+          <a href="<%= scholarship.url %>" target="_blank" class="apply-btn">Learn More</a>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<%= javascript_tag do %>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.bookmark-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const scholarshipId = this.dataset.scholarshipId;
+        
+        fetch(`/bookmarks/${scholarshipId}`, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            this.closest('.scholarship-card').remove();
+          }
+        });
+      });
+    });
+  });
+<% end %>

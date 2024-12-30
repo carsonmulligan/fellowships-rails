@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "bookmarks/index"
+  get "bookmarks/create"
+  get "bookmarks/destroy"
   # Landing page
   root "static_pages#landing"
 
@@ -20,4 +23,7 @@ Rails.application.routes.draw do
 
   # Additional scholarship routes if needed
   resources :scholarships, only: [:index]
+
+  # Bookmark routes
+  resources :bookmarks, only: [:index, :create, :destroy]
 end
