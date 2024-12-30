@@ -6,8 +6,13 @@
     <p class="subtitle">Interactive Fellowship Lessons & Timeline 📚</p>
     
     <div class="cta-buttons">
-      <%= form_tag '/auth/google_oauth2', method: :post, data: { turbo: false } do %>
-        <%= button_tag '🔑 Sign in with Google', class: 'google-signin-btn' %>
+      <%= form_tag user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false } do %>
+        <%= button_tag type: 'submit', class: 'google-btn' do %>
+          <div class="google-icon-wrapper">
+            <%= image_tag "google.png", class: "google-icon", alt: "Google sign-in" %>
+          </div>
+          <p class="btn-text"><b>Sign in with Google</b></p>
+        <% end %>
       <% end %>
       <%= link_to '💫 Buy $99', product_path, class: 'buy-btn' %>
     </div>
@@ -128,8 +133,13 @@
     <h2>Ready to Start Your Fellowship Journey? 🚀</h2>
     <p class="price-tag">One-time payment of $99 for lifetime access</p>
     <div class="cta-buttons">
-      <%= form_tag '/auth/google_oauth2', method: :post, data: { turbo: false } do %>
-        <%= button_tag '🔑 Sign in with Google', class: 'google-signin-btn' %>
+      <%= form_tag user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false } do %>
+        <%= button_tag type: 'submit', class: 'google-btn' do %>
+          <div class="google-icon-wrapper">
+            <%= image_tag "google.png", class: "google-icon", alt: "Google sign-in" %>
+          </div>
+          <p class="btn-text"><b>Sign in with Google</b></p>
+        <% end %>
       <% end %>
       <%= link_to '💫 Buy Now - 60% Off', product_path, class: 'buy-btn highlight' %>
     </div>

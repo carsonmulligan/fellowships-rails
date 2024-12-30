@@ -1,5 +1,5 @@
 <!-- Add this hidden form at the top of the modal -->
-<%= form_tag '/auth/google_oauth2', method: :post, data: { turbo: false }, id: 'google-auth-form' %>
+<%= form_tag user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false }, id: 'google-auth-form' %>
 
 <!-- Premium Features Modal -->
 <div id="premium-features-modal" class="modal">

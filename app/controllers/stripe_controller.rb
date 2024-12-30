@@ -8,7 +8,7 @@ class StripeController < ApplicationController
   def buy
     # Must have user_id in session
     unless session[:user_id]
-      return redirect_to "/auth/google_oauth2", notice: "Please sign in first"
+      return redirect_to user_google_oauth2_omniauth_authorize_path, notice: "Please sign in first"
     end
 
     Stripe.api_key = ENV['STRIPE_SECRET_KEY']
