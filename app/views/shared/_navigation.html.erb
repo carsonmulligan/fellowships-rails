@@ -13,9 +13,6 @@
           👤 Account
         </button>
         <div class="dropdown-content">
-          <% if current_user.premium? %>
-            <span class="premium-badge">✨ Premium Member</span>
-          <% end %>
           <%= link_to "📚 My Bookmarks", bookmarks_path %>
           <%= link_to "⚙️ Settings", edit_user_registration_path %>
           <%= button_to "🚪 Sign Out", destroy_user_session_path, method: :delete, class: "sign-out-btn" %>
@@ -136,16 +133,6 @@
 
 .dropdown-content a:hover, .dropdown-content button:hover {
   background: #f8f9fa;
-}
-
-.premium-badge {
-  display: block;
-  padding: 0.5rem 1rem;
-  background: #ffd700;
-  color: #2c3e50;
-  font-weight: 500;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
 }
 
 .sign-out-btn {
