@@ -1,7 +1,7 @@
 <!-- Filter Bar -->
 <div class="filter-bar">
   <div class="filter-groups">
-    <% if session[:user_id] %>
+    <% if current_user %>
       <button class="filter-btn <%= 'active' if params[:filter] == 'bookmarked' %>" 
               data-filter="bookmarked"
               onclick="window.location.href='<%= scholarships_path(filter: 'bookmarked') %>'">
@@ -128,10 +128,12 @@
           // Remove filter
           this.classList.remove('active');
           activeFilters.delete(filter);
+          window.history.pushState({}, '', '<%= scholarships_path %>');
         } else {
           // Add filter
           this.classList.add('active');
           activeFilters.add(filter);
+          window.history.pushState({}, '', '<%= scholarships_path %>?filter=' + filter);
         }
         
         // Show/hide close filters button
