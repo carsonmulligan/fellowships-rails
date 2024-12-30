@@ -1,4 +1,7 @@
 class BookmarksController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:create, :destroy]
+  allow_browser all: true
+
   before_action :require_login
 
   def index

@@ -1,4 +1,6 @@
 class ScholarshipsController < ApplicationController
+  allow_browser all: true
+
   def index
     @scholarships = Scholarship.all
     @bookmarked_count = current_user ? Bookmark.where(user_id: current_user.id).count : 0
