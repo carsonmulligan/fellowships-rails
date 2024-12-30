@@ -3,6 +3,13 @@ git config --global alias.cmp '!git checkout main && git pull'
 git config --global alias.pom '!git push origin main'
 git config --global alias.pomc '!git push origin main && clear'
 git config --global alias.aipom '!git add . && ai-commit --emoji --force && git push origin main'
+git config --global alias.cob '!f() { git checkout -b "$1"; }; f'
+git config --global alias.b '!f() { git branch "$1"; }; f'
+git config --global alias.pushb '!git push --set-upstream origin $(git branch --show-current)'
+git config --global alias.checkmerge '!git fetch origin && git diff --name-only $(git branch --show-current)..origin/main'
+git config --global alias.merge '!git merge'
+
+
 
 
 
