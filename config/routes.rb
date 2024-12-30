@@ -1,29 +1,18 @@
 Rails.application.routes.draw do
-  get "bookmarks/index"
-  get "bookmarks/create"
-  get "bookmarks/destroy"
-  # Landing page
-  root "static_pages#landing"
-
-  # Product page
-  get "/product", to: "static_pages#product"
-
-  # Home page (post-subscription or after payment) - now shows scholarships
-  get "/home", to: "scholarships#index"
-
-  # Stripe webhook endpoint
-  post "/stripe/webhook", to: "stripe#webhook"
-
-  # Create a route to handle "buy" action:
-  post "/buy", to: "stripe#buy"
-
-  # OmniAuth callback routes
-  get '/auth/:provider/callback', to: 'sessions#omniauth'
-  get '/auth/failure', to: redirect('/')
-
-  # Additional scholarship routes if needed
-  resources :scholarships, only: [:index]
-
-  # Bookmark routes
-  resources :bookmarks, only: [:index, :create, :destroy]
+  root 'scholarships#index'
+  
+  # Authentication routes
+  get '/auth/:provider/callback', to: 'sessions#create'
+  delete '/logout', to: 'sessions#destroy'
+  
+  # Resource routes
+  resources :scholarships, only: [:index, :show]
+  resources :bookmarks, only: [:create, :destroy]
+  
+  # Pricing and checkout routes
+  get '/pricing', to: 'pages#pricing'
+  post '/create-checkout-session', to: 'checkout#create'
+  get '/checkout/success', to: 'checkout#success'
+  get '/checkout/cancel', to: 'checkout#cancel'
+  post '/stripe-webhook', to: 'checkout#webhook'
 end

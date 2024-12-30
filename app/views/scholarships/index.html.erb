@@ -2,23 +2,25 @@
 <div class="filter-bar">
   <div class="filter-groups">
     <% if session[:user_id] %>
-      <button class="filter-btn" data-bookmarked="true">
+      <button class="filter-btn" data-filter="bookmarked">
         ⭐️ Bookmarked (<%= @bookmarked_count %>)
       </button>
     <% end %>
     <% Scholarship.tag_counts.each do |tag, count| %>
-      <button class="filter-btn" data-tag="<%= tag %>">
+      <button class="filter-btn" data-filter="<%= tag %>">
         <%= get_emoji(tag) %> <%= tag.titleize %> (<%= count %>)
       </button>
     <% end %>
-    <button class="close-filters-btn">Close filters</button>
+    <button class="close-filters-btn" style="display: none;">Close filters</button>
   </div>
 </div>
 
 <!-- Scholarship Grid -->
 <div class="scholarship-grid">
   <% @scholarships.each do |scholarship| %>
-    <div class="scholarship-card" data-tags="<%= scholarship.tags.join(' ') %>" data-bookmarked="<%= scholarship.bookmarks.exists?(user_id: session[:user_id]) %>">
+    <div class="scholarship-card" 
+         data-tags="<%= scholarship.tags.join(' ') %>"
+         data-bookmarked="<%= scholarship.bookmarks.exists?(user_id: session[:user_id]) %>">
       <div class="card-header">
         <h3><%= scholarship.name %></h3>
         <div class="due-date">Due: <%= scholarship.due_date %></div>
@@ -35,12 +37,10 @@
           <% end %>
         </div>
         <div class="action-buttons">
-          <% if session[:user_id] %>
-            <button class="bookmark-btn <%= 'active' if scholarship.bookmarks.exists?(user_id: session[:user_id]) %>" 
-                    data-scholarship-id="<%= scholarship.id %>">
-              ⭐️ <%= scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'Bookmarked' : 'Bookmark' %>
-            </button>
-          <% end %>
+          <button class="bookmark-btn <%= session[:user_id] && scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'active' : '' %>" 
+                  data-scholarship-id="<%= scholarship.id %>">
+            ⭐️ <%= session[:user_id] && scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'Bookmarked' : 'Bookmark' %>
+          </button>
           <a href="<%= scholarship.url %>" target="_blank" class="apply-btn">Learn More</a>
         </div>
       </div>
@@ -48,113 +48,123 @@
   <% end %>
 </div>
 
+<%= render 'shared/premium_features_modal' %>
+
 <%= javascript_tag do %>
   document.addEventListener('DOMContentLoaded', function() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const scholarshipCards = document.querySelectorAll('.scholarship-card');
+    const filterBtns = document.querySelectorAll('.filter-btn');
     const closeFiltersBtn = document.querySelector('.close-filters-btn');
+    const scholarshipCards = document.querySelectorAll('.scholarship-card');
+    const modal = document.getElementById('premium-features-modal');
     let activeFilters = new Set();
-    let showBookmarkedOnly = false;
-    let bookmarkCount = <%= @bookmarked_count %>;
-    const bookmarkPill = document.querySelector('[data-bookmarked="true"]');
-
-    // Function to toggle bookmark
-    function toggleBookmark(button) {
-      const scholarshipId = button.dataset.scholarshipId;
-      const isBookmarked = button.classList.contains('active');
-      
-      const method = isBookmarked ? 'DELETE' : 'POST';
-      const url = isBookmarked ? `/bookmarks/${scholarshipId}` : '/bookmarks';
-      
-      fetch(url, {
-        method: method,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
-        },
-        body: !isBookmarked ? JSON.stringify({ scholarship_id: scholarshipId }) : null
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === 'success') {
-          button.classList.toggle('active');
-          button.textContent = isBookmarked ? '⭐️ Bookmark' : '⭐️ Bookmarked';
-          // Update the card's bookmarked status
-          button.closest('.scholarship-card').dataset.bookmarked = (!isBookmarked).toString();
-          // Update bookmark count
-          const bookmarkCount = parseInt(document.querySelector('[data-bookmarked="true"]').textContent.match(/\d+/)[0]) + (isBookmarked ? -1 : 1);
-          document.querySelector('[data-bookmarked="true"]').textContent = `⭐️ Bookmarked (${bookmarkCount})`;
-          // Re-run filters in case bookmarked filter is active
-          filterScholarships();
-        }
-      });
-    }
-
-    filterButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        if (this.dataset.bookmarked) {
-          if (showBookmarkedOnly) {
-            // If we're already showing bookmarks, clicking again will show all bookmarked cards
-            // and allow quick unbookmarking
-            const bookmarkedCards = document.querySelectorAll('.scholarship-card[data-bookmarked="true"]');
-            bookmarkedCards.forEach(card => {
-              card.style.display = 'block';
-            });
-          }
-          showBookmarkedOnly = !showBookmarkedOnly;
-          this.classList.toggle('active');
+    
+    // Filter button click handler
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const filter = this.dataset.filter;
+        
+        if (this.classList.contains('active')) {
+          // Remove filter
+          this.classList.remove('active');
+          activeFilters.delete(filter);
         } else {
-          const tag = this.dataset.tag;
-          if (activeFilters.has(tag)) {
-            activeFilters.delete(tag);
-            this.classList.remove('active');
-          } else {
-            activeFilters.add(tag);
-            this.classList.add('active');
-          }
+          // Add filter
+          this.classList.add('active');
+          activeFilters.add(filter);
         }
-        filterScholarships();
+        
+        // Show/hide close filters button
+        closeFiltersBtn.style.display = activeFilters.size > 0 ? 'block' : 'none';
+        
+        // Apply filters
+        scholarshipCards.forEach(card => {
+          if (activeFilters.size === 0) {
+            card.style.display = 'block';
+            return;
+          }
+          
+          let shouldShow = false;
+          
+          // Check bookmarked filter
+          if (activeFilters.has('bookmarked')) {
+            shouldShow = card.dataset.bookmarked === 'true';
+          }
+          
+          // Check tag filters
+          const cardTags = card.dataset.tags.split(' ');
+          activeFilters.forEach(filter => {
+            if (filter !== 'bookmarked' && cardTags.includes(filter)) {
+              shouldShow = true;
+            }
+          });
+          
+          card.style.display = shouldShow ? 'block' : 'none';
+        });
       });
     });
-
+    
+    // Close filters button click handler
     closeFiltersBtn.addEventListener('click', function() {
       activeFilters.clear();
-      showBookmarkedOnly = false;
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      filterScholarships();
+      filterBtns.forEach(btn => btn.classList.remove('active'));
+      scholarshipCards.forEach(card => card.style.display = 'block');
+      this.style.display = 'none';
     });
-
-    function filterScholarships() {
-      scholarshipCards.forEach(card => {
-        const cardTags = card.dataset.tags.split(' ');
-        const isBookmarked = card.dataset.bookmarked === 'true';
+    
+    // Bookmark button click handler
+    const bookmarkBtns = document.querySelectorAll('.bookmark-btn');
+    bookmarkBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
         
-        const matchesBookmarkFilter = !showBookmarkedOnly || isBookmarked;
-        const matchesTagFilters = activeFilters.size === 0 || 
-          Array.from(activeFilters).every(tag => cardTags.includes(tag));
-
-        card.style.display = (matchesBookmarkFilter && matchesTagFilters) ? 'block' : 'none';
-      });
-    }
-
-    // Bookmark functionality
-    document.querySelectorAll('.bookmark-btn').forEach(button => {
-      button.addEventListener('click', function(e) {
-        e.stopPropagation(); // Prevent card click if we click the button
-        toggleBookmark(this);
-      });
-    });
-
-    // Add click handler to cards when bookmark filter is active
-    scholarshipCards.forEach(card => {
-      card.addEventListener('click', function(e) {
-        if (showBookmarkedOnly && card.dataset.bookmarked === 'true') {
-          const bookmarkBtn = card.querySelector('.bookmark-btn');
-          if (bookmarkBtn) {
-            toggleBookmark(bookmarkBtn);
+        // Check if user is authenticated
+        if (!<%= !!session[:user_id] %>) {
+          if (modal) {
+            modal.style.display = 'block';
           }
+          return;
         }
+        
+        const scholarshipId = this.dataset.scholarshipId;
+        const isBookmarked = this.classList.contains('active');
+        
+        const method = isBookmarked ? 'DELETE' : 'POST';
+        const url = isBookmarked ? `/bookmarks/${scholarshipId}` : '/bookmarks';
+        
+        fetch(url, {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+          },
+          body: JSON.stringify({ scholarship_id: scholarshipId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            this.classList.toggle('active');
+            this.textContent = isBookmarked ? '⭐️ Bookmark' : '⭐️ Bookmarked';
+            
+            // Update bookmark count in filter pill
+            const bookmarkedFilter = document.querySelector('.filter-btn[data-filter="bookmarked"]');
+            if (bookmarkedFilter) {
+              const currentCount = parseInt(bookmarkedFilter.textContent.match(/\d+/)[0]);
+              const newCount = isBookmarked ? currentCount - 1 : currentCount + 1;
+              bookmarkedFilter.textContent = `⭐️ Bookmarked (${newCount})`;
+            }
+            
+            // Update card's data-bookmarked attribute
+            this.closest('.scholarship-card').dataset.bookmarked = (!isBookmarked).toString();
+          }
+        });
       });
     });
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    };
   });
 <% end %> 
