@@ -285,14 +285,15 @@
         'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
       },
       body: JSON.stringify({
-        email: email,
-        price: 'price_fellows_membership'
+        email: email
       })
     })
     .then(response => response.json())
     .then(data => {
       if (data.url) {
         window.location.href = data.url;
+      } else if (data.error) {
+        alert(data.error);
       }
     })
     .catch(error => {

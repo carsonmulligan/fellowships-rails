@@ -9,7 +9,14 @@ class CheckoutController < ApplicationController
     session = Stripe::Checkout::Session.create({
       payment_method_types: ['card'],
       line_items: [{
-        price: params[:price],
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: 'Fellows Membership',
+            description: 'One-time payment. Then never again.',
+          },
+          unit_amount: 10000, # $100.00
+        },
         quantity: 1,
       }],
       mode: 'payment',
