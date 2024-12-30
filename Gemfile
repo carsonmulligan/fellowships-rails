@@ -68,13 +68,11 @@ gem 'omniauth-google-oauth2'
 # For Stripe integration
 gem 'stripe'
 
-# Add these lines before the end of the Gemfile
+# Authentication & Authorization
+gem 'devise'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
 
 # Tagging
 gem 'acts-as-taggable-on'
-
-# Authentication
-gem 'devise'
