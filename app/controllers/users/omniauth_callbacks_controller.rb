@@ -10,7 +10,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       # Send welcome email for new users
       if @user.sign_in_count == 1
-        UserMailer.with(user: user).welcome_email.deliver_later
+        UserMailer.with(user: @user).welcome_email.deliver_later
       end
 
       sign_in_and_redirect @user, event: :authentication
