@@ -1,0 +1,136 @@
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="navbar-brand">
+    <%= link_to "F-RAD", root_path, class: "brand-link" %>
+  </div>
+
+  <div class="navbar-menu">
+    <% if user_signed_in? %>
+      <div class="dropdown">
+        <button class="dropdown-toggle" onclick="toggleDropdown()">
+          👤 Account
+        </button>
+        <div id="accountDropdown" class="dropdown-menu">
+          <%= link_to "Profile", "#", class: "dropdown-item" %>
+          <%= link_to "Settings", "#", class: "dropdown-item" %>
+          <%= link_to "Change Password", "#", class: "dropdown-item" %>
+          <%= link_to "Bookmarks", "#", class: "dropdown-item" %>
+        </div>
+      </div>
+      <%= button_to "🚪 Sign Out", destroy_user_session_path, method: :delete, class: "nav-button" %>
+    <% else %>
+      <%= link_to "🌟 Join Fellows", "#", onclick: "showPremiumModal()", class: "nav-button primary" %>
+      <%= link_to "🔑 Login", new_user_session_path, class: "nav-button" %>
+    <% end %>
+  </div>
+</nav>
+
+<style>
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand .brand-link {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}
+
+.navbar-menu {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav-button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  background: #f8f9fa;
+  color: #333;
+}
+
+.nav-button:hover {
+  background: #e9ecef;
+}
+
+.nav-button.primary {
+  background: #28a745;
+  color: white;
+}
+
+.nav-button.primary:hover {
+  background: #218838;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #f8f9fa;
+  color: #333;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  min-width: 160px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  z-index: 1000;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #333;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background: #f8f9fa;
+}
+</style>
+
+<script>
+function toggleDropdown() {
+  document.getElementById("accountDropdown").classList.toggle("show");
+}
+
+// Close dropdown when clicking outside
+window.onclick = function(event) {
+  if (!event.target.matches('.dropdown-toggle')) {
+    var dropdowns = document.getElementsByClassName("dropdown-menu");
+    for (var i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script> 
