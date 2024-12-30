@@ -1,4 +1,5 @@
 git config --global alias.ai '!git add . && ai-commit --emoji --force'
+git config --global alias.cmp '!git checkout main && git pull'
 
 --emoji: Add a gitmoji to the commit message
 
