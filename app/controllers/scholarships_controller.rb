@@ -1,5 +1,5 @@
 class ScholarshipsController < ApplicationController
-  allow_browser versions: :all
+  allow_browser versions: { chrome: 90, firefox: 90, safari: 14 }
 
   def index
     @scholarships = Scholarship.all
