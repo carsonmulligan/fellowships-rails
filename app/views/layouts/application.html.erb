@@ -14,7 +14,7 @@
     <%= yield %>
     <%= render 'shared/premium_features_modal' %>
 
-    <% if session.delete(:show_premium_modal) %>
+    <% if params[:show_premium_modal] %>
       <script>
         document.addEventListener('DOMContentLoaded', function() {
           const modal = document.getElementById('premium-features-modal');
