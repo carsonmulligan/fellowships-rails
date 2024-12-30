@@ -20,7 +20,7 @@
   <% @scholarships.each do |scholarship| %>
     <div class="scholarship-card" 
          data-tags="<%= scholarship.tags.join(' ') %>"
-         data-bookmarked="<%= scholarship.bookmarks.exists?(user_id: session[:user_id]) %>">
+         data-bookmarked="<%= scholarship.bookmarks.exists?(user_id: current_user&.id) %>">
       <%= link_to scholarship_path(scholarship), class: "card-link" do %>
         <div class="card-header">
           <h3><%= scholarship.name %></h3>
@@ -38,10 +38,10 @@
             <% end %>
           </div>
           <div class="action-buttons">
-            <button class="bookmark-btn <%= session[:user_id] && scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'active' : '' %>" 
+            <button class="bookmark-btn <%= current_user && scholarship.bookmarks.exists?(user_id: current_user.id) ? 'active' : '' %>" 
                     data-scholarship-id="<%= scholarship.id %>"
                     onclick="event.preventDefault(); toggleBookmark(this)">
-              ⭐️ <%= session[:user_id] && scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'Bookmarked' : 'Bookmark' %>
+              ⭐️ <%= current_user && scholarship.bookmarks.exists?(user_id: current_user.id) ? 'Bookmarked' : 'Bookmark' %>
             </button>
             <button class="share-btn" 
                     onclick="event.preventDefault(); shareScholarship('<%= scholarship_url(scholarship) %>')"
@@ -152,7 +152,8 @@
     // Bookmark button click handler
     function toggleBookmark(button) {
       // Check if user is authenticated
-      if (!<%= !!session[:user_id] %>) {
+      if (!<%= premium_user? %>) {
+        const modal = document.getElementById('premium-features-modal');
         if (modal) {
           modal.style.display = 'block';
         }

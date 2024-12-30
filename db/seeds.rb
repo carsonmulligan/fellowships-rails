@@ -521,3 +521,15 @@ scholarships.each do |scholarship|
 
   puts "#{scholarship[:name]} - scholarship created successfully with tags: #{tags.join(', ')}"
 end
+
+# Create admin user
+admin = User.create!(
+  email: 'admin@example.com',
+  password: 'password123',
+  password_confirmation: 'password123',
+  premium: true
+)
+
+puts "Created admin user:"
+puts "Email: admin@example.com"
+puts "Password: password123"

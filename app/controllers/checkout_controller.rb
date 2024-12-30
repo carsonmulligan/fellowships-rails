@@ -45,8 +45,13 @@ class CheckoutController < ApplicationController
       return
     end
     
+    # If user is signed in with a different email, sign them out
+    if current_user && current_user.email != email
+      sign_out current_user
+    end
+
+    # If user is signed in with the same email, just update premium
     if current_user && current_user.email == email
-      # If current user matches the checkout email, just update premium
       current_user.update(premium: true)
       redirect_to root_path, notice: 'Welcome to Fellows! Your payment was successful.'
     else

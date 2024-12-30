@@ -18,15 +18,11 @@ Rails.application.routes.draw do
   post '/create-checkout-session', to: 'checkout#create'
   get '/checkout/success', to: 'checkout#success'
   get '/checkout/cancel', to: 'checkout#cancel'
-  post '/stripe-webhook', to: 'checkout#webhook'
-
-  # Checkout routes
-  post 'create-checkout-session', to: 'checkout#create'
-  get 'checkout/success', to: 'checkout#success'
-  get 'checkout/cancel', to: 'checkout#cancel'
-  post 'checkout/webhook', to: 'checkout#webhook'
+  post '/webhook', to: 'checkout#webhook'
 
   # Account setup routes
   get '/account/setup', to: 'accounts#setup', as: 'account_setup'
   post '/account/create_password', to: 'accounts#create_password', as: 'create_password_account'
 end
+
+

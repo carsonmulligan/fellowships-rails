@@ -3,12 +3,12 @@ class BookmarksController < ApplicationController
 
   def index
     @bookmarked_scholarships = Scholarship.joins(:bookmarks)
-                                        .where(bookmarks: { user_id: session[:user_id] })
+                                      .where(bookmarks: { user_id: current_user.id })
   end
 
   def create
     @bookmark = Bookmark.new(
-      user_id: session[:user_id],
+      user_id: current_user.id,
       scholarship_id: params[:scholarship_id]
     )
 
@@ -21,7 +21,7 @@ class BookmarksController < ApplicationController
 
   def destroy
     @bookmark = Bookmark.find_by(
-      user_id: session[:user_id],
+      user_id: current_user.id,
       scholarship_id: params[:id]
     )
 
@@ -35,7 +35,7 @@ class BookmarksController < ApplicationController
   private
 
   def require_login
-    unless session[:user_id]
+    unless current_user
       redirect_to root_path, notice: "Please sign in first"
     end
   end

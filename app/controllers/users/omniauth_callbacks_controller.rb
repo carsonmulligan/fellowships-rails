@@ -3,6 +3,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = User.from_omniauth(request.env["omniauth.auth"])
 
     if @user.persisted?
+      if session[:checkout_email] && session[:checkout_email] == @user.email
+        @user.update(premium: true)
+        session.delete(:checkout_email)
+      end
+
       sign_in_and_redirect @user, event: :authentication
       set_flash_message(:notice, :success, kind: "Google") if is_navigational_format?
     else
