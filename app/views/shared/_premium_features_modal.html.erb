@@ -296,6 +296,17 @@ function handleJoinFellows() {
   });
 }
 
+// Add event listener for Enter key
+document.addEventListener('DOMContentLoaded', function() {
+  const emailInput = document.getElementById('premium-email');
+  emailInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleJoinFellows();
+    }
+  });
+});
+
 // Show modal function
 function showPremiumModal() {
   const modal = document.getElementById('premium-features-modal');
