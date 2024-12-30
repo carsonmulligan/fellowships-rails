@@ -1,13 +1,13 @@
 Rails.application.routes.draw do
+  # Devise routes with OmniAuth
   devise_for :users, controllers: {
-    omniauth_callbacks: 'users/omniauth_callbacks'
+    omniauth_callbacks: 'users/omniauth_callbacks',
+    sessions: 'users/sessions'
   }
   devise_for :admins
-  root 'scholarships#index'
   
-  # Authentication routes
-  get '/auth/:provider/callback', to: 'sessions#create'
-  delete '/logout', to: 'sessions#destroy'
+  # Root route
+  root 'scholarships#index'
   
   # Resource routes
   resources :scholarships, only: [:index, :show]
