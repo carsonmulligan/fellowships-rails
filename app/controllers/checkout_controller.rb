@@ -37,10 +37,9 @@ class CheckoutController < ApplicationController
   end
 
   def success
-    # Update user's premium status
     if session[:user_id]
-      user = User.find(session[:user_id])
-      user.update(premium: true)
+      # Store premium status in session for now
+      session[:premium] = true
       flash[:success] = "Welcome to F-RAD Premium! You now have lifetime access to all features."
     end
     redirect_to root_path
@@ -73,8 +72,8 @@ class CheckoutController < ApplicationController
       user_id = session.metadata.user_id
       
       if user_id
-        user = User.find(user_id)
-        user.update(premium: true)
+        # Store the premium status in session
+        session[:premium] = true
       end
     end
 
