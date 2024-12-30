@@ -1,1 +1,5 @@
-git config --global alias.ai '!git add . && ai-commit
+git config --global alias.ai '!git add . && ai-commit --emoji --force'
+
+--emoji: Add a gitmoji to the commit message
+
+--force: Automatically create a commit without being prompted to select a message 
