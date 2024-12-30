@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  allow_browser versions: :modern
+  # Allow all browsers while maintaining security
+  skip_before_action :verify_browser_support, if: -> { request.format.json? }
+  allow_browser versions: :modern, except: %w[bookmarks scholarships]
 end
