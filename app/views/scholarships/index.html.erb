@@ -3,7 +3,7 @@
   <div class="filter-groups">
     <% if session[:user_id] %>
       <button class="filter-btn" data-bookmarked="true">
-        ⭐️ Bookmarked
+        ⭐️ Bookmarked (<%= @bookmarked_count %>)
       </button>
     <% end %>
     <% Scholarship.tag_counts.each do |tag, count| %>
@@ -38,7 +38,7 @@
           <% if session[:user_id] %>
             <button class="bookmark-btn <%= 'active' if scholarship.bookmarks.exists?(user_id: session[:user_id]) %>" 
                     data-scholarship-id="<%= scholarship.id %>">
-              ★ <%= scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'Bookmarked' : 'Bookmark' %>
+              ⭐️ <%= scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'Bookmarked' : 'Bookmark' %>
             </button>
           <% end %>
           <a href="<%= scholarship.url %>" target="_blank" class="apply-btn">Learn More</a>
@@ -55,6 +55,8 @@
     const closeFiltersBtn = document.querySelector('.close-filters-btn');
     let activeFilters = new Set();
     let showBookmarkedOnly = false;
+    let bookmarkCount = <%= @bookmarked_count %>;
+    const bookmarkPill = document.querySelector('[data-bookmarked="true"]');
 
     filterButtons.forEach(button => {
       button.addEventListener('click', function() {
@@ -117,9 +119,14 @@
         .then(data => {
           if (data.status === 'success') {
             this.classList.toggle('active');
-            this.textContent = isBookmarked ? '★ Bookmark' : '★ Bookmarked';
+            this.textContent = isBookmarked ? '⭐️ Bookmark' : '⭐️ Bookmarked';
             // Update the card's bookmarked status
             this.closest('.scholarship-card').dataset.bookmarked = (!isBookmarked).toString();
+            // Update bookmark count
+            bookmarkCount += isBookmarked ? -1 : 1;
+            if (bookmarkPill) {
+              bookmarkPill.textContent = `⭐️ Bookmarked (${bookmarkCount})`;
+            }
             // Re-run filters in case bookmarked filter is active
             filterScholarships();
           }
