@@ -1,53 +1,62 @@
 class CheckoutController < ApplicationController
-  before_action :initialize_stripe
+  skip_before_action :verify_authenticity_token, only: [:webhook]
 
   def create
-    # Ensure user is authenticated
-    unless session[:user_id]
-      render json: { error: 'Authentication required' }, status: :unauthorized
-      return
-    end
-
-    # Create a one-time payment session
-    checkout_session = Stripe::Checkout::Session.create({
-      payment_method_types: ['card'],
-      line_items: [{
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: 'F-RAD Premium Lifetime Access',
-            description: 'Get unlimited access to all premium features forever',
+    # Store the email in the session for later use
+    session[:checkout_email] = params[:email]
+    
+    begin
+      # Create a Stripe checkout session
+      session = Stripe::Checkout::Session.create({
+        payment_method_types: ['card'],
+        line_items: [{
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Fellows Membership',
+              description: 'One-time payment. Then never again.',
+            },
+            unit_amount: 10000, # $100.00
           },
-          unit_amount: 7900, # $79.00
-        },
-        quantity: 1,
-      }],
-      mode: 'payment',
-      success_url: "#{root_url}checkout/success",
-      cancel_url: "#{root_url}checkout/cancel",
-      metadata: {
-        user_id: session[:user_id]
-      },
-      allow_promotion_codes: true
-    })
+          quantity: 1,
+        }],
+        mode: 'payment',
+        success_url: success_url,
+        cancel_url: cancel_url,
+        customer_email: params[:email],
+        metadata: {
+          email: params[:email]
+        }
+      })
 
-    render json: { id: checkout_session.id, url: checkout_session.url }
-  rescue Stripe::StripeError => e
-    render json: { error: e.message }, status: :unprocessable_entity
+      render json: { url: session.url }
+    rescue => e
+      Rails.logger.error("Stripe session creation failed: #{e.message}")
+      render json: { error: e.message }, status: :unprocessable_entity
+    end
   end
 
   def success
-    if session[:user_id]
-      # Store premium status in session for now
-      session[:premium] = true
-      flash[:success] = "Welcome to F-RAD Premium! You now have lifetime access to all features."
+    # The user has completed payment
+    email = session[:checkout_email]
+    
+    unless email
+      redirect_to root_path, alert: 'Something went wrong. Please try again.'
+      return
     end
-    redirect_to root_path
+    
+    if current_user && current_user.email == email
+      # If current user matches the checkout email, just update premium
+      current_user.update(premium: true)
+      redirect_to root_path, notice: 'Welcome to Fellows! Your payment was successful.'
+    else
+      # For new users or different emails, redirect to account setup
+      redirect_to account_setup_path
+    end
   end
 
   def cancel
-    flash[:notice] = "Your purchase was cancelled. Let us know if you have any questions!"
-    redirect_to root_path
+    redirect_to root_path, alert: 'Payment was cancelled.'
   end
 
   def webhook
@@ -67,22 +76,27 @@ class CheckoutController < ApplicationController
       return
     end
 
-    if event['type'] == 'checkout.session.completed'
-      session = event['data']['object']
-      user_id = session.metadata.user_id
+    case event.type
+    when 'checkout.session.completed'
+      session = event.data.object
+      email = session.metadata.email
       
-      if user_id
-        # Store the premium status in session
-        session[:premium] = true
+      # Only update existing users, don't create accounts
+      if user = User.find_by(email: email)
+        user.update(premium: true)
       end
     end
 
-    render json: { status: 'success' }
+    render json: { message: 'Success' }
   end
 
   private
 
-  def initialize_stripe
-    Stripe.api_key = ENV['STRIPE_SECRET_KEY']
+  def success_url
+    checkout_success_url
+  end
+
+  def cancel_url
+    checkout_cancel_url
   end
 end 
