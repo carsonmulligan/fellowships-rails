@@ -75,20 +75,6 @@ Notes / Journal (/notes or in each scholarship show)
    - Provide suggested email templates to professors requesting rec letters
 
 --------------------------------------------------------------------------------
-Add Scholarships ("/scholarships/new")
---------------------------------------------------------------------------------
-   - For admin or superusers: 
-     Form to add new scholarship: name, url, due date, etc.
-   - For normal users: Possibly an “Add Custom Scholarship” to track 
-     local/unlisted fellowship details.
-
---------------------------------------------------------------------------------
-Upload More Scholarships
---------------------------------------------------------------------------------
-   - Mechanism to do a bulk CSV upload or manual entry
-   - Admin panel or “Import” button
-
---------------------------------------------------------------------------------
 Scholarship Show Page ("/scholarships/:id")
 --------------------------------------------------------------------------------
    1) Title, Description, URL, Due Date
@@ -98,9 +84,7 @@ Scholarship Show Page ("/scholarships/:id")
        - Draft your personal statement
        - Upload documents (transcripts, essays)
        - E-mail templates to request letters of recommendation
-   5) “Link Enrichment” / Perplexity or summary:
-       - “Additional Resources” or “Enriched Links about [this fellowship]”
-         (maybe stored or generated from external APIs)
+
    6) “Reading List Recommendations” for scholarship
    7) “Unique Knowledge / Tips” (like hidden tips to improve your application)
 
