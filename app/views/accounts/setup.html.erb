@@ -1,23 +1,5 @@
 <div class="account-setup-container">
   <h1>Complete Your Account Setup</h1>
-  <p class="subtitle">Choose how you'd like to sign in to Fellows</p>
-
-  <div class="setup-options">
-    <div class="setup-option">
-      <h2>Sign in with Google</h2>
-      <p>Use your Google account for quick and secure access</p>
-      <%= button_to user_google_oauth2_omniauth_authorize_path, 
-                    method: :post,
-                    data: { turbo: false },
-                    class: "google-button" do %>
-        <img src="https://www.google.com/favicon.ico" alt="Google" class="google-icon">
-        Continue with Google
-      <% end %>
-    </div>
-
-    <div class="divider">
-      <span>or</span>
-    </div>
 
     <div class="setup-option">
       <h2>Create a Password</h2>
