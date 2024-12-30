@@ -1,19 +1,24 @@
 <!-- Filter Bar -->
 <div class="filter-bar">
-  <div class="filter-groups">
-    <% if current_user %>
-      <button class="filter-btn <%= 'active' if params[:filter] == 'bookmarked' %>" 
-              data-filter="bookmarked"
-              onclick="window.location.href='<%= scholarships_path(filter: 'bookmarked') %>'">
-        ⭐️ Bookmarked (<%= @bookmarked_count %>)
-      </button>
-    <% end %>
-    <% Scholarship.tag_counts.each do |tag, count| %>
-      <button class="filter-btn" data-filter="<%= tag %>">
-        <%= get_emoji(tag) %> <%= tag.titleize %> (<%= count %>)
-      </button>
-    <% end %>
-    <button class="close-filters-btn" style="display: none;">Close filters</button>
+  <div class="filter-header">
+    <div class="filter-groups">
+      <% if current_user %>
+        <button class="filter-btn <%= 'active' if params[:filter] == 'bookmarked' %>" 
+                data-filter="bookmarked"
+                onclick="window.location.href='<%= scholarships_path(filter: 'bookmarked') %>'">
+          ⭐️ Bookmarked (<%= @bookmarked_count %>)
+        </button>
+      <% end %>
+      <% Scholarship.tag_counts.each do |tag, count| %>
+        <button class="filter-btn" data-filter="<%= tag %>">
+          <%= get_emoji(tag) %> <%= tag.titleize %> (<%= count %>)
+        </button>
+      <% end %>
+      <button class="close-filters-btn" style="display: none;">Close filters</button>
+    </div>
+    <button class="filter-toggle-btn" onclick="toggleFilterBar()">
+      <span class="toggle-icon">🔍</span>
+    </button>
   </div>
 </div>
 
@@ -108,6 +113,52 @@
 
   .filter-btn:hover {
     background-color: #f7fafc;
+  }
+
+  .filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .filter-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .filter-groups.hidden {
+    display: none;
+  }
+
+  .filter-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 9999px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 1rem;
+  }
+
+  .filter-toggle-btn:hover {
+    background-color: #f7fafc;
+    transform: scale(1.05);
+  }
+
+  .filter-toggle-btn.active {
+    background-color: #4a5568;
+    color: white;
+  }
+
+  .toggle-icon {
+    font-size: 1.2rem;
   }
 </style>
 
@@ -243,6 +294,23 @@
     window.onclick = function(event) {
       if (event.target == modal) {
         modal.style.display = 'none';
+      }
+    };
+
+    // Filter toggle functionality
+    window.toggleFilterBar = function() {
+      const filterGroups = document.querySelector('.filter-groups');
+      const toggleBtn = document.querySelector('.filter-toggle-btn');
+      
+      filterGroups.classList.toggle('hidden');
+      toggleBtn.classList.toggle('active');
+      
+      // Update toggle icon
+      const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+      if (filterGroups.classList.contains('hidden')) {
+        toggleIcon.textContent = '🔍';
+      } else {
+        toggleIcon.textContent = '✕';
       }
     };
   });
