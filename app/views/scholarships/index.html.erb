@@ -152,7 +152,8 @@
     // Bookmark button click handler
     function toggleBookmark(button) {
       // Check if user is authenticated
-      if (!<%= !!session[:user_id] %>) {
+      if (!<%= premium_user? %>) {
+        const modal = document.getElementById('premium-features-modal');
         if (modal) {
           modal.style.display = 'block';
         }
