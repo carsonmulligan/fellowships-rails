@@ -75,3 +75,6 @@ gem 'omniauth-rails_csrf_protection'
 
 # Tagging
 gem 'acts-as-taggable-on'
+
+# Authentication
+gem 'devise'
