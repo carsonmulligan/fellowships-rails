@@ -7,6 +7,7 @@
     
     <div class="cta-buttons">
       <%= form_tag user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false } do %>
+        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
         <%= button_tag type: 'submit', class: 'google-btn' do %>
           <div class="google-icon-wrapper">
             <%= image_tag "google.png", class: "google-icon", alt: "Google sign-in" %>
@@ -134,6 +135,7 @@
     <p class="price-tag">One-time payment of $99 for lifetime access</p>
     <div class="cta-buttons">
       <%= form_tag user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false } do %>
+        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
         <%= button_tag type: 'submit', class: 'google-btn' do %>
           <div class="google-icon-wrapper">
             <%= image_tag "google.png", class: "google-icon", alt: "Google sign-in" %>
