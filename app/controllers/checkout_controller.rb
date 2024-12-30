@@ -2,8 +2,14 @@ class CheckoutController < ApplicationController
   before_action :initialize_stripe
 
   def create
+    # Ensure user is authenticated
+    unless session[:user_id]
+      render json: { error: 'Authentication required' }, status: :unauthorized
+      return
+    end
+
     # Create a one-time payment session
-    session = Stripe::Checkout::Session.create({
+    checkout_session = Stripe::Checkout::Session.create({
       payment_method_types: ['card'],
       line_items: [{
         price_data: {
@@ -19,11 +25,15 @@ class CheckoutController < ApplicationController
       mode: 'payment',
       success_url: "#{root_url}checkout/success",
       cancel_url: "#{root_url}checkout/cancel",
-      client_reference_id: session[:user_id],
-      allow_promotion_codes: true,
+      metadata: {
+        user_id: session[:user_id]
+      },
+      allow_promotion_codes: true
     })
 
-    render json: { id: session.id }
+    render json: { id: checkout_session.id, url: checkout_session.url }
+  rescue Stripe::StripeError => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   def success
@@ -60,7 +70,7 @@ class CheckoutController < ApplicationController
 
     if event['type'] == 'checkout.session.completed'
       session = event['data']['object']
-      user_id = session.client_reference_id
+      user_id = session.metadata.user_id
       
       if user_id
         user = User.find(user_id)

@@ -1,3 +1,6 @@
+<!-- Add this hidden form at the top of the modal -->
+<%= form_tag '/auth/google_oauth2', method: :post, data: { turbo: false }, id: 'google-auth-form' %>
+
 <!-- Premium Features Modal -->
 <div id="premium-features-modal" class="modal">
   <div class="modal-content">
@@ -329,12 +332,12 @@
   });
 
   async function handlePurchase() {
-    // First, trigger Google Sign In
+    // First, trigger Google Sign In if not signed in
     if (!<%= !!session[:user_id] %>) {
       // Store intent to purchase
       localStorage.setItem('initiate_purchase', 'true');
       // Trigger Google Sign In
-      document.createElement('form').submit.call(document.querySelector('form[action="/auth/google_oauth2"]'));
+      document.getElementById('google-auth-form').submit();
       return;
     }
 
@@ -348,16 +351,14 @@
         }
       });
       
-      const session = await response.json();
+      const data = await response.json();
       
-      const stripe = Stripe('<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>');
-      const result = await stripe.redirectToCheckout({
-        sessionId: session.id
-      });
-
-      if (result.error) {
-        alert(result.error.message);
+      if (data.error) {
+        throw new Error(data.error);
       }
+
+      // Redirect to Stripe Checkout
+      window.location.href = data.url;
     } catch (error) {
       console.error('Error:', error);
       alert('Something went wrong. Please try again.');
@@ -369,4 +370,7 @@
     localStorage.removeItem('initiate_purchase');
     handlePurchase();
   }
-</script> 
+</script>
+
+<!-- Add Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script> 
