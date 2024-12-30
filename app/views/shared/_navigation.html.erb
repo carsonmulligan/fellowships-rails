@@ -27,10 +27,6 @@
     <% else %>
       <div class="auth-buttons">
         <%= link_to "Sign In", new_user_session_path, class: "login-btn" %>
-        <%= link_to "Continue with Google", user_google_oauth2_omniauth_authorize_path, 
-            method: :post, 
-            data: { turbo: false }, 
-            class: "google-btn" %>
       </div>
     <% end %>
   </div>
