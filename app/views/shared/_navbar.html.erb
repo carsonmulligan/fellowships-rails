@@ -1,0 +1,98 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <%= link_to root_path, class: "navbar-logo" do %>
+      🎓 F-RAD
+    <% end %>
+  </div>
+
+  <div class="navbar-end">
+    <% if session[:user_id] %>
+      <div class="user-menu">
+        <%= button_to logout_path, method: :delete, class: "logout-btn" do %>
+          Sign Out
+        <% end %>
+      </div>
+    <% else %>
+      <button id="login-btn" class="login-btn">
+        Sign In
+      </button>
+    <% end %>
+  </div>
+</nav>
+
+<style>
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navbar-logo {
+  text-decoration: none;
+  color: #2c3e50;
+}
+
+.navbar-end {
+  display: flex;
+  align-items: center;
+}
+
+.login-btn, .logout-btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.login-btn {
+  background: #007bff;
+  color: white;
+}
+
+.login-btn:hover {
+  background: #0056b3;
+}
+
+.logout-btn {
+  background: #f8f9fa;
+  color: #2c3e50;
+  border: 1px solid #ddd;
+}
+
+.logout-btn:hover {
+  background: #e9ecef;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const loginBtn = document.getElementById('login-btn');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', function() {
+      const modal = document.getElementById('premium-features-modal');
+      if (modal) {
+        modal.style.display = 'block';
+      }
+    });
+  }
+});
+</script> 

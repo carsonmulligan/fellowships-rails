@@ -1,31 +1,29 @@
 <!-- Premium Features Modal -->
-<div id="premium-features-modal" class="modal" style="display: none;">
+<div id="premium-features-modal" class="modal">
   <div class="modal-content">
+    <button class="close-btn">&times;</button>
+    
     <div class="modal-grid">
-      <!-- Left Panel (Scrollable) -->
-      <div class="left-panel">
-        <div class="landing-content">
-          <%= render 'shared/landing_content' %>
-        </div>
+      <!-- Left side - Scrollable landing content -->
+      <div class="modal-left">
+        <%= render 'shared/landing_content' %>
       </div>
 
-      <!-- Right Panel -->
-      <div class="right-panel">
-        <!-- Video Section -->
+      <!-- Right side - Fixed content -->
+      <div class="modal-right">
         <div class="video-container">
           <iframe 
             width="100%" 
             height="315" 
-            src="https://www.youtube.com/embed/UVtrvArSihQ" 
+            src="https://www.youtube.com/embed/UVtrvArSihQ?si=_5mGUBGwWCZNVL1M" 
             frameborder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen>
           </iframe>
         </div>
 
-        <!-- Features List -->
-        <div class="features-list">
-          <h3>🔒 Premium Features</h3>
+        <div class="premium-features">
+          <h2>🔒 Premium Features</h2>
           <ul>
             <li>⭐️ Bookmark Scholarships</li>
             <li>📝 Track Applications</li>
@@ -34,16 +32,13 @@
           </ul>
         </div>
 
-        <!-- Auth & Pricing -->
-        <div class="auth-section">
+        <div class="pricing">
+          <h3>$9.99/month</h3>
           <button id="google-sign-in" class="google-btn">
-            <img src="/google-icon.png" alt="Google">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
             Sign in with Google
           </button>
-          <div class="pricing">
-            <span class="price">$9.99/month</span>
-            <button id="subscribe-btn" class="subscribe-btn">Subscribe Now</button>
-          </div>
+          <button id="subscribe-btn" class="subscribe-btn">Subscribe Now</button>
         </div>
       </div>
     </div>
@@ -52,114 +47,161 @@
 
 <style>
 .modal {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.7);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
 
 .modal-content {
   position: relative;
-  width: 90%;
-  max-width: 1200px;
+  background-color: white;
   margin: 2% auto;
-  background: white;
+  width: 90%;
+  max-width: 1000px;
   border-radius: 12px;
-  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   max-height: 90vh;
+  overflow: hidden;
+}
+
+.close-btn {
+  position: absolute;
+  right: 30px;
+  top: 25px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #666;
+  border: none;
+  background: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.close-btn:hover {
+  color: #333;
 }
 
 .modal-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 2rem;
+  height: 100%;
+  max-height: calc(90vh - 4rem);
+  overflow: hidden;
+}
+
+.modal-left {
+  padding: 2rem;
+  overflow-y: auto;
+  border-right: 1px solid #eee;
   height: 100%;
 }
 
-.left-panel {
-  overflow-y: auto;
-  padding-right: 20px;
-  border-right: 1px solid #eee;
-}
-
-.right-panel {
+.modal-right {
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 2rem;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .video-container {
   width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
+  margin-bottom: 1rem;
 }
 
-.features-list {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
+.premium-features {
+  text-align: left;
 }
 
-.features-list ul {
+.premium-features h2 {
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.premium-features ul {
   list-style: none;
   padding: 0;
 }
 
-.features-list li {
-  margin: 10px 0;
-  font-size: 1.1em;
+.premium-features li {
+  margin: 1rem 0;
+  font-size: 1.1rem;
+  color: #2c3e50;
 }
 
-.auth-section {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  align-items: center;
+.pricing {
+  text-align: center;
+  margin-top: auto;
+}
+
+.pricing h3 {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
 }
 
 .google-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 24px;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.8rem;
   border: 1px solid #ddd;
-  border-radius: 24px;
+  border-radius: 4px;
   background: white;
+  color: #2c3e50;
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s;
+  margin-bottom: 1rem;
 }
 
-.google-btn:hover {
-  background: #f8f9fa;
-}
-
-.pricing {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.price {
-  font-size: 1.5em;
-  font-weight: bold;
+.google-btn img {
+  width: 18px;
+  height: 18px;
 }
 
 .subscribe-btn {
-  padding: 12px 36px;
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 4px;
   background: #007bff;
   color: white;
-  border: none;
-  border-radius: 24px;
-  font-size: 1.1em;
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s;
 }
 
 .subscribe-btn:hover {
   background: #0056b3;
 }
-</style> 
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('premium-features-modal');
+  const closeBtn = modal.querySelector('.close-btn');
+  const googleBtn = document.getElementById('google-sign-in');
+  
+  closeBtn.onclick = function() {
+    modal.style.display = 'none';
+  }
+  
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  }
+  
+  googleBtn.onclick = function() {
+    window.location.href = '/auth/google_oauth2';
+  }
+});
+</script> 

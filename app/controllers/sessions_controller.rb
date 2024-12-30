@@ -1,9 +1,12 @@
 class SessionsController < ApplicationController
-  def omniauth
+  def create
     auth = request.env['omniauth.auth']
     session[:user_id] = auth.uid
-    session[:user_email] = auth.info.email
-    
-    redirect_to home_path, notice: 'Successfully signed in!'
+    redirect_to root_path
+  end
+
+  def destroy
+    session[:user_id] = nil
+    redirect_to root_path
   end
 end

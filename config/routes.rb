@@ -1,13 +1,13 @@
 Rails.application.routes.draw do
   root 'scholarships#index'
   
-  resources :scholarships, only: [:index]
-  resources :bookmarks, only: [:index, :create, :destroy]
-  
   # Authentication routes
   get '/auth/:provider/callback', to: 'sessions#create'
-  get '/auth/failure', to: 'sessions#failure'
   delete '/logout', to: 'sessions#destroy'
+  
+  # Resource routes
+  resources :scholarships, only: [:index, :show]
+  resources :bookmarks, only: [:create, :destroy]
   
   # Checkout routes
   post '/create-checkout-session', to: 'checkout#create'
