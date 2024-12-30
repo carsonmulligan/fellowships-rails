@@ -37,15 +37,14 @@ class CheckoutController < ApplicationController
     # The user has completed payment
     email = session[:checkout_email]
     
-    # If user is already signed in, just update premium status
-    if current_user
+    if current_user && current_user.email == email
+      # If current user matches the checkout email, just update premium
       current_user.update(premium: true)
       redirect_to root_path, notice: 'Welcome to Fellows! Your payment was successful.'
-      return
+    else
+      # For new users or different emails, redirect to account setup
+      redirect_to account_setup_path
     end
-
-    # For new users, redirect to account setup
-    redirect_to account_setup_path
   end
 
   def cancel
@@ -74,18 +73,9 @@ class CheckoutController < ApplicationController
       session = event.data.object
       email = session.metadata.email
       
-      # Find or create user
-      user = User.find_by(email: email)
-      if user
+      # Only update existing users, don't create accounts
+      if user = User.find_by(email: email)
         user.update(premium: true)
-      else
-        password = Devise.friendly_token[0, 20]
-        User.create!(
-          email: email,
-          password: password,
-          password_confirmation: password,
-          premium: true
-        )
       end
     end
 
