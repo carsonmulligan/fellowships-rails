@@ -1,8 +1,10 @@
 <!-- Filter Bar -->
 <div class="filter-bar">
   <div class="filter-groups">
-    <% if session[:user_id] %>
-      <button class="filter-btn" data-filter="bookmarked">
+    <% if current_user %>
+      <button class="filter-btn <%= 'active' if params[:filter] == 'bookmarked' %>" 
+              data-filter="bookmarked"
+              onclick="window.location.href='<%= scholarships_path(filter: 'bookmarked') %>'">
         ⭐️ Bookmarked (<%= @bookmarked_count %>)
       </button>
     <% end %>
@@ -86,6 +88,27 @@
   .share-btn:hover {
     background: #5a6268;
   }
+
+  .filter-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    margin: 0.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 9999px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn.active {
+    background-color: #4a5568;
+    color: white;
+  }
+
+  .filter-btn:hover {
+    background-color: #f7fafc;
+  }
 </style>
 
 <%= javascript_tag do %>
@@ -105,10 +128,12 @@
           // Remove filter
           this.classList.remove('active');
           activeFilters.delete(filter);
+          window.history.pushState({}, '', '<%= scholarships_path %>');
         } else {
           // Add filter
           this.classList.add('active');
           activeFilters.add(filter);
+          window.history.pushState({}, '', '<%= scholarships_path %>?filter=' + filter);
         }
         
         // Show/hide close filters button
