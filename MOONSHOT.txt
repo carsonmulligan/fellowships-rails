@@ -1,0 +1,188 @@
+================================================================================
+Fellowships4You — MASTER ASCII WIREFRAME (Including Product Page + Extended Features)
+================================================================================
+
+                                  ┌─────────────────────┐
+                                  │  LANDING PAGE ("/") │
+                                  └─────────────────────┘
+   - Very long, “infinite scroll” style page:
+       1) Hero Header: 
+          - "Fellowships4You" brand
+          - Tagline: "Complete Guide to Major Graduate Fellowships"
+          - [Sign In With Google] [Buy for $99 One-time] CTA buttons
+       
+       2) Scrolling Sections:
+          - Explainer about Graduate Fellowships
+          - ROI breakdown: "Invest $99, Potentially gain $50k–$200k"
+          - Student Testimonials
+          - "Why fellowships matter" education chunk
+          - “Explore → Prepare → Execute” steps teased
+          - Multiple repeated CTAs to either sign in or buy
+       
+       3) Final CTA at the bottom:
+          - [ Sign In with Google ] [One-Time Purchase $99 ]
+          - Guarantee: "30-day refund"
+
+                                  ┌─────────────────────────┐
+                                  │  PRODUCT PAGE ("/product") │
+                                  └─────────────────────────┘
+   - Detailed course features & pricing (one-time $99).
+   - Modules shown:
+       1) Explore
+          - Identify best fellowship fits
+          - Funding amounts, eligibility, timelines
+       2) Prepare
+          - Steps to create personal statements, gather rec letters
+          - Sample winning statements, annotated
+       3) Execute
+          - Deadline & interview readiness
+          - Submitting, tracking next steps
+   - Pricing Box:
+       - "$99 One-Time" 
+       - "Lifetime updates, no subscription" 
+   - CTA: [Buy Now - $99] => Stripe checkout flow
+
+                                  ┌─────────────────┐
+                                  │  HOME PAGE ("/home") │
+                                  └─────────────────┘
+   - After user has purchased or is recognized as premium:
+       1) Dashboard sidebar:
+          - Fellowships
+          - Bookmarks
+          - Settings
+          - Notes (Journal)
+          - "Add Scholarship" (Admin or user-supplied)
+       2) Quick stats: 
+          - Deadlines coming up soon
+          - # of scholarships bookmarked
+          - # of tasks in your "Application Tracker" 
+       3) Gamification progress bar:
+          - Earn “Application XP” for completed tasks
+          - Track each scholarship's progress from 0% to 100%
+
+--------------------------------------------------------------------------------
+Bookmarks (/bookmarks)
+--------------------------------------------------------------------------------
+   - List of scholarships the user has bookmarked
+   - Quick links to “Show Scholarship” or “Remove Bookmark”
+   - Possibly filter by due date or tags
+
+--------------------------------------------------------------------------------
+Notes / Journal (/notes or in each scholarship show)
+--------------------------------------------------------------------------------
+   - Let users add text notes or journaling logs about the scholarship
+   - Possibly track the date/time entry
+   - Provide suggested email templates to professors requesting rec letters
+
+--------------------------------------------------------------------------------
+Add Scholarships ("/scholarships/new")
+--------------------------------------------------------------------------------
+   - For admin or superusers: 
+     Form to add new scholarship: name, url, due date, etc.
+   - For normal users: Possibly an “Add Custom Scholarship” to track 
+     local/unlisted fellowship details.
+
+--------------------------------------------------------------------------------
+Upload More Scholarships
+--------------------------------------------------------------------------------
+   - Mechanism to do a bulk CSV upload or manual entry
+   - Admin panel or “Import” button
+
+--------------------------------------------------------------------------------
+Scholarship Show Page ("/scholarships/:id")
+--------------------------------------------------------------------------------
+   1) Title, Description, URL, Due Date
+   2) Bookmarks button: "Bookmark" or "Remove Bookmark"
+   3) "Add to Calendar" or "Add to Plan" 
+   4) "Notes / Journal" section:
+       - Draft your personal statement
+       - Upload documents (transcripts, essays)
+       - E-mail templates to request letters of recommendation
+   5) “Link Enrichment” / Perplexity or summary:
+       - “Additional Resources” or “Enriched Links about [this fellowship]”
+         (maybe stored or generated from external APIs)
+   6) “Reading List Recommendations” for scholarship
+   7) “Unique Knowledge / Tips” (like hidden tips to improve your application)
+
+--------------------------------------------------------------------------------
+Requirements Scraper / Clicking "Check Requirements" 
+--------------------------------------------------------------------------------
+   - Possibly a button “Scrape Requirements” 
+   - Grabs or lists typical docs required (essays, rec letters, transcripts)
+   - Fill out in the app to track status
+
+--------------------------------------------------------------------------------
+Application Tracker
+--------------------------------------------------------------------------------
+   - Central timeline or table listing each scholarship + major steps:
+       - [ ] Request transcripts
+       - [ ] Personal statement draft
+       - [ ] Secure 2 rec letters
+       - [ ] Official submission
+   - Each step can have a due date => auto-populates calendar
+
+--------------------------------------------------------------------------------
+Calendar Feature
+--------------------------------------------------------------------------------
+   - Monthly or weekly view of upcoming fellowship deadlines
+   - Click a date => see tasks or due items
+   - “Add to my plan” => create custom tasks
+
+--------------------------------------------------------------------------------
+Email Reminders
+--------------------------------------------------------------------------------
+   - “Email me about this scholarship in X days”
+   - Possibly stored in the user’s tasks => trigger background job
+
+--------------------------------------------------------------------------------
+Gamification
+--------------------------------------------------------------------------------
+   - Earn “XP” for each application step
+   - Insert “Draft an email to a professor for a rec letter” => +5 XP
+   - Upload your personal statement => +10 XP
+   - Complete entire application => +50 XP
+   - Show user a progress bar or level system
+
+--------------------------------------------------------------------------------
+Connect to University Scholarship Office
+--------------------------------------------------------------------------------
+   - Possibly user enters their university name => auto-lists contact info
+   - Provide direct link to campus fellowship advisors
+
+--------------------------------------------------------------------------------
+URL Import => "Input a Scholarship URL => Return Key Data"
+--------------------------------------------------------------------------------
+   - Scrapes or attempts to parse deadlines & summary
+   - Adds that to user’s personal scholarship list to track
+
+--------------------------------------------------------------------------------
+Final Flow Overview in ASCII:
+--------------------------------------------------------------------------------
+ LANDING PAGE ("/") [Infinite Scroll, multiple CTAs]
+     ↓
+ PRODUCT PAGE ("/product") 
+    + "Modules: Explore / Prepare / Execute"
+    + Price: $99 => Stripe Checkout
+     ↓
+ STRIPE CHECKOUT => success => Payment => user premium
+     ↓
+ HOME PAGE ("/home") => 
+   [Sidebar w/ Fellowships | Bookmarks | Settings | 
+    Notes/Journal | Add Scholarship | Tracker & Calendar]
+     ↓
+ SCHOLARSHIPS:
+   -> index => filter, search, sort
+   -> show => link enrichment, reading list, progress, tasks, notes 
+     ↓
+ BOOKMARKS:
+   -> index => user’s saved scholarships, quick remove
+     ↓
+ NOTES:
+   -> for journaling, rec letter templates
+     ↓
+ TRACKER & CALENDAR:
+   -> due dates, tasks, email reminders, gamification
+     ↓
+ (All other new features integrated along the way)
+
+================================================================================
