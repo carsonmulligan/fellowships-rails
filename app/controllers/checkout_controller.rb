@@ -37,24 +37,15 @@ class CheckoutController < ApplicationController
     # The user has completed payment
     email = session[:checkout_email]
     
-    # If the user is not signed in, create a new user account
-    unless current_user
-      password = Devise.friendly_token[0, 20]
-      user = User.create!(
-        email: email,
-        password: password,
-        password_confirmation: password
-      )
-      sign_in(user)
+    # If user is already signed in, just update premium status
+    if current_user
+      current_user.update(premium: true)
+      redirect_to root_path, notice: 'Welcome to Fellows! Your payment was successful.'
+      return
     end
 
-    # Update user's premium status
-    current_user.update(premium: true)
-    
-    # Clear the checkout email from session
-    session.delete(:checkout_email)
-    
-    redirect_to root_path, notice: 'Welcome to Fellows! Your payment was successful.'
+    # For new users, redirect to account setup
+    redirect_to account_setup_path
   end
 
   def cancel

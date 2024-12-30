@@ -25,4 +25,8 @@ Rails.application.routes.draw do
   get 'checkout/success', to: 'checkout#success'
   get 'checkout/cancel', to: 'checkout#cancel'
   post 'checkout/webhook', to: 'checkout#webhook'
+
+  # Account setup routes
+  get '/account/setup', to: 'accounts#setup', as: 'account_setup'
+  post '/account/create_password', to: 'accounts#create_password', as: 'create_password_account'
 end
