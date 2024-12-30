@@ -1,6 +1,6 @@
 class BookmarksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create, :destroy]
-  allow_browser all: true
+  allow_browser versions: :all
 
   before_action :require_login
 
