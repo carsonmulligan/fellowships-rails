@@ -1,6 +1,4 @@
 class ScholarshipsController < ApplicationController
-  skip_before_action :verify_browser_support, if: -> { request.format.json? }
-
   def index
     @scholarships = Scholarship.all
     @bookmarked_count = current_user ? Bookmark.where(user_id: current_user.id).count : 0
