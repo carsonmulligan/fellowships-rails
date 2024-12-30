@@ -19,4 +19,10 @@ Rails.application.routes.draw do
   get '/checkout/success', to: 'checkout#success'
   get '/checkout/cancel', to: 'checkout#cancel'
   post '/stripe-webhook', to: 'checkout#webhook'
+
+  # Checkout routes
+  post 'create-checkout-session', to: 'checkout#create'
+  get 'checkout/success', to: 'checkout#success'
+  get 'checkout/cancel', to: 'checkout#cancel'
+  post 'checkout/webhook', to: 'checkout#webhook'
 end
