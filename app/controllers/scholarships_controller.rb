@@ -1,11 +1,11 @@
 class ScholarshipsController < ApplicationController
   def index
     @scholarships = Scholarship.all
-    @bookmarked_count = session[:user_id] ? Bookmark.where(user_id: session[:user_id]).count : 0
+    @bookmarked_count = current_user ? Bookmark.where(user_id: current_user.id).count : 0
   end
 
   def show
     @scholarship = Scholarship.find(params[:id])
-    @is_bookmarked = session[:user_id] && Bookmark.exists?(user_id: session[:user_id], scholarship_id: @scholarship.id)
+    @is_bookmarked = current_user && Bookmark.exists?(user_id: current_user.id, scholarship_id: @scholarship.id)
   end
 end 
