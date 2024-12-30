@@ -4,38 +4,46 @@ class CheckoutController < ApplicationController
   def create
     # Store the email in the session for later use
     session[:checkout_email] = params[:email]
-
-    # Create a Stripe checkout session
-    session = Stripe::Checkout::Session.create({
-      payment_method_types: ['card'],
-      line_items: [{
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: 'Fellows Membership',
-            description: 'One-time payment. Then never again.',
+    
+    begin
+      # Create a Stripe checkout session
+      session = Stripe::Checkout::Session.create({
+        payment_method_types: ['card'],
+        line_items: [{
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Fellows Membership',
+              description: 'One-time payment. Then never again.',
+            },
+            unit_amount: 10000, # $100.00
           },
-          unit_amount: 10000, # $100.00
-        },
-        quantity: 1,
-      }],
-      mode: 'payment',
-      success_url: success_url,
-      cancel_url: cancel_url,
-      customer_email: params[:email],
-      metadata: {
-        email: params[:email]
-      }
-    })
+          quantity: 1,
+        }],
+        mode: 'payment',
+        success_url: success_url,
+        cancel_url: cancel_url,
+        customer_email: params[:email],
+        metadata: {
+          email: params[:email]
+        }
+      })
 
-    render json: { url: session.url }
-  rescue => e
-    render json: { error: e.message }, status: :unprocessable_entity
+      render json: { url: session.url }
+    rescue => e
+      Rails.logger.error("Stripe session creation failed: #{e.message}")
+      render json: { error: e.message }, status: :unprocessable_entity
+    end
   end
 
   def success
     # The user has completed payment
     email = session[:checkout_email]
+    
+    unless email
+      redirect_to root_path, alert: 'Something went wrong. Please try again.'
+      return
+    end
     
     if current_user && current_user.email == email
       # If current user matches the checkout email, just update premium
