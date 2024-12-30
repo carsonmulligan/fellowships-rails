@@ -1,32 +1,40 @@
 <!-- Navigation Bar -->
-<nav class="navbar">
-  <div class="navbar-brand">
-    <%= link_to "F-RAD", root_path, class: "brand-link" %>
-  </div>
-
-  <div class="navbar-menu">
-    <% if user_signed_in? %>
-      <div class="dropdown">
-        <button class="dropdown-toggle" onclick="toggleDropdown()">
-          👤 Account
-        </button>
-        <div id="accountDropdown" class="dropdown-menu">
-          <%= link_to "Profile", "#", class: "dropdown-item" %>
-          <%= link_to "Settings", "#", class: "dropdown-item" %>
-          <%= link_to "Change Password", "#", class: "dropdown-item" %>
-          <%= link_to "Bookmarks", "#", class: "dropdown-item" %>
-        </div>
-      </div>
-      <%= button_to "🚪 Sign Out", destroy_user_session_path, method: :delete, class: "nav-button" %>
-    <% else %>
-      <%= link_to "🌟 Join Fellows", "#", onclick: "showPremiumModal()", class: "nav-button primary" %>
-      <%= link_to "🔑 Login", new_user_session_path, class: "nav-button" %>
+<div class="nav-container">
+  <div class="nav-brand">
+    <%= link_to root_path, class: "brand-link" do %>
+      <span class="brand-text">F-RAD</span>
     <% end %>
   </div>
-</nav>
+
+  <div class="nav-links">
+    <% if user_signed_in? %>
+      <div class="dropdown">
+        <button class="dropdown-btn">
+          👤 Account
+        </button>
+        <div class="dropdown-content">
+          <% if current_user.premium? %>
+            <span class="premium-badge">✨ Premium Member</span>
+          <% end %>
+          <%= link_to "📚 My Bookmarks", bookmarks_path %>
+          <%= link_to "⚙️ Settings", edit_user_registration_path %>
+          <%= button_to "🚪 Sign Out", destroy_user_session_path, method: :delete, class: "sign-out-btn" %>
+        </div>
+      </div>
+    <% else %>
+      <div class="auth-buttons">
+        <%= link_to "🔑 Login", new_user_session_path, class: "login-btn" %>
+        <%= link_to "Continue with Google", user_google_oauth2_omniauth_authorize_path, 
+            method: :post, 
+            data: { turbo: false }, 
+            class: "google-btn" %>
+      </div>
+    <% end %>
+  </div>
+</div>
 
 <style>
-.navbar {
+.nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -35,42 +43,51 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.navbar-brand .brand-link {
+.brand-link {
+  text-decoration: none;
+  color: #2c3e50;
   font-size: 1.5rem;
   font-weight: bold;
-  color: #333;
-  text-decoration: none;
 }
 
-.navbar-menu {
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.auth-buttons {
   display: flex;
   gap: 1rem;
   align-items: center;
 }
 
-.nav-button {
+.login-btn, .google-btn {
   padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
+  border-radius: 6px;
   text-decoration: none;
+  font-weight: 500;
   transition: all 0.2s;
-  background: #f8f9fa;
-  color: #333;
 }
 
-.nav-button:hover {
+.login-btn {
+  background: #f8f9fa;
+  color: #2c3e50;
+  border: 1px solid #dee2e6;
+}
+
+.login-btn:hover {
   background: #e9ecef;
 }
 
-.nav-button.primary {
-  background: #28a745;
+.google-btn {
+  background: #4285f4;
   color: white;
+  border: none;
 }
 
-.nav-button.primary:hover {
-  background: #218838;
+.google-btn:hover {
+  background: #3367d6;
 }
 
 .dropdown {
@@ -78,59 +95,71 @@
   display: inline-block;
 }
 
-.dropdown-toggle {
+.dropdown-btn {
   padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
   background: #f8f9fa;
-  color: #333;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
 }
 
-.dropdown-menu {
+.dropdown-content {
   display: none;
   position: absolute;
   right: 0;
-  min-width: 160px;
   background: white;
+  min-width: 200px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   border-radius: 8px;
-  padding: 0.5rem 0;
+  padding: 0.5rem;
   z-index: 1000;
 }
 
-.dropdown-menu.show {
+.dropdown:hover .dropdown-content {
   display: block;
 }
 
-.dropdown-item {
+.dropdown-content a, .dropdown-content button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: #2c3e50;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.dropdown-content a:hover, .dropdown-content button:hover {
+  background: #f8f9fa;
+}
+
+.premium-badge {
   display: block;
   padding: 0.5rem 1rem;
-  color: #333;
-  text-decoration: none;
+  background: #ffd700;
+  color: #2c3e50;
+  font-weight: 500;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
 }
 
-.dropdown-item:hover {
-  background: #f8f9fa;
+.sign-out-btn {
+  color: #dc3545;
 }
 </style>
 
 <script>
-function toggleDropdown() {
-  document.getElementById("accountDropdown").classList.toggle("show");
-}
-
-// Close dropdown when clicking outside
-window.onclick = function(event) {
-  if (!event.target.matches('.dropdown-toggle')) {
-    var dropdowns = document.getElementsByClassName("dropdown-menu");
-    for (var i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
+document.addEventListener('click', function(event) {
+  const dropdowns = document.querySelectorAll('.dropdown-content');
+  dropdowns.forEach(dropdown => {
+    if (!event.target.matches('.dropdown-btn') && !dropdown.contains(event.target)) {
+      dropdown.style.display = 'none';
     }
-  }
-}
+  });
+});
 </script> 

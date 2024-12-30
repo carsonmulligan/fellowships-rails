@@ -1,102 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "F-RAD" %></title>
+    <title>F-RAD</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= yield :head %>
-
-    <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <script src="https://js.stripe.com/v3/"></script>
-
-    <style>
-      .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 2rem;
-        background: white;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      }
-
-      .navbar-brand {
-        display: flex;
-        align-items: center;
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #333;
-        text-decoration: none;
-      }
-
-      .navbar-brand:hover {
-        color: #007bff;
-      }
-
-      .sign-in-btn {
-        padding: 0.5rem 1.5rem;
-        border: none;
-        border-radius: 20px;
-        background: #007bff;
-        color: white;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: background-color 0.2s;
-      }
-
-      .sign-in-btn:hover {
-        background: #0056b3;
-      }
-
-      .sign-out-btn {
-        padding: 0.5rem 1.5rem;
-        border: 1px solid #dc3545;
-        border-radius: 20px;
-        background: white;
-        color: #dc3545;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: all 0.2s;
-      }
-
-      .sign-out-btn:hover {
-        background: #dc3545;
-        color: white;
-      }
-    </style>
+    <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <nav class="navbar">
-      <%= link_to root_path, class: "navbar-brand" do %>
-        🎓 F-RAD
-      <% end %>
-
-      <div>
-        <% if session[:user_id] %>
-          <%= button_to "Sign Out", logout_path, method: :delete, class: "sign-out-btn" %>
-        <% else %>
-          <button onclick="showPremiumModal()" class="sign-in-btn">Sign In</button>
-        <% end %>
-      </div>
-    </nav>
-
+    <%= render 'shared/navigation' %>
+    <%= render 'shared/flash' %>
     <%= yield %>
-
-    <script>
-      function showPremiumModal() {
-        const modal = document.getElementById('premium-features-modal');
-        if (modal) {
-          modal.style.display = 'block';
-        }
-      }
-    </script>
+    <%= render 'shared/premium_features_modal' %>
   </body>
 </html>
