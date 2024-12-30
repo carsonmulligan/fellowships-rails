@@ -1,59 +1,147 @@
-# README
+#######################################################################
+#                           Fellowships4You                          #
+#                       A Ruby on Rails Application                  #
+#                       ASCII-Style README                           #
+#######################################################################
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Welcome to **Fellowships4You**, your gateway to academic excellence through 
+scholarships and fellowships! This application is designed with simplicity 
+and efficiency in mind. Below is a comprehensive guide to get started.
 
-Things you may want to cover:
+=======================================================================
+                           SETUP INSTRUCTIONS                        
+=======================================================================
 
-* Ruby version
+PREREQUISITES:
+--------------
+Ensure you have the following installed:
+- Ruby 3.1.2
+- Rails 7.2.2
+- PostgreSQL
+- Node.js & Yarn
 
-* System dependencies
+CLONE THE REPOSITORY:
+---------------------
+Run the following commands to clone and navigate into the project:
+git clone https://github.com/your-repo/fellowships4you.git
+cd fellowships4you
 
-* Configuration
+INSTALL DEPENDENCIES:
+---------------------
+Install Ruby and JavaScript dependencies:
+bundle install
+yarn install
 
-* Database creation
+DATABASE SETUP:
+---------------
+Create and configure the database:
+rails db:create
+rails db:migrate
 
-* Database initialization
+(Optional) Seed the database with initial data:
+rails db:seed
 
-* How to run the test suite
+ENVIRONMENT VARIABLES:
+----------------------
+Set up a `.env` file in the root directory with the following content:
+# Google OAuth
+GOOGLE_CLIENT_ID=<your-google-client-id>
+GOOGLE_CLIENT_SECRET=<your-google-client-secret>
 
-* Services (job queues, cache servers, search engines, etc.)
+# Stripe
+STRIPE_PUBLISHABLE_KEY=<your-stripe-publishable-key>
+STRIPE_SECRET_KEY=<your-stripe-secret-key>
+STRIPE_WEBHOOK_SECRET=<your-stripe-webhook-secret>
 
-* Deployment instructions
+START THE SERVER:
+-----------------
+Run the Rails server:
+rails server
 
-* ...
+Visit the app at: http://localhost:3000
 
-ASCII Wireframe for F-Rad (Ruby on Rails):
-------------------------------------------
-Landing Page (/) => sign in or buy => /product => create checkout => Stripe => 
-webhook => Payment => /home => see content.
+=======================================================================
+                           PROJECT STRUCTURE                          
+=======================================================================
 
-   LANDING PAGE:
-   ┌────────────────────────────────────────────────────────────────┐
-   │ F-Rad Fellowship Planner (multiple CTAs)                      │
-   │   [Sign In w/ Google]  [Buy $99 => post /buy]                 │
-   └────────────────────────────────────────────────────────────────┘
-                    ↓
-   PRODUCT PAGE (/product):
-   ┌────────────────────────────────────────────────────────────────┐
-   │ Modules: Explore, Prepare, Execute                            │
-   │   - "Buy $99" => post /buy => Stripe checkout                 │
-   └────────────────────────────────────────────────────────────────┘
-                    ↓
-   STRIPE WEBHOOK (/stripe/webhook):
-   ┌────────────────────────────────────────────────────────────────┐
-   │ If event= checkout.session.completed => Payment.create(...)    │
-   └────────────────────────────────────────────────────────────────┘
-                    ↓
-   HOME PAGE (/home):
-   ┌────────────────────────────────────────────────────────────────┐
-   │ If Payment found => show advanced content, else redirect.      │
-   └────────────────────────────────────────────────────────────────┘
+APP STRUCTURE:
+--------------
+- **app/**: Contains core application files (models, controllers, views, helpers).
+- **config/**: Configuration files for the app, including routes and database settings.
+- **public/**: Static files, error pages, and the manifest file.
+- **db/**: Migrations and schema files for the database.
+- **test/**: Test files for the application.
+- **notes/**: Project notes and related documents.
 
-Usage:
-1) rails s
-2) visit http://localhost:3000
-3) Create "payments" table already done by generator + migrations.
-4) Google OAuth => /auth/google_oauth2
-5) Happy hacking!
+=======================================================================
+                          USER JOURNEY OVERVIEW                       
+=======================================================================
 
+ASCII WIREFRAME:
+----------------
+Landing Page (/)
+┌────────────────────────────────────────────────────────────────┐
+│ Fellowships4You                                                │
+│ [Sign In with Google] [Explore Scholarships]                  │
+│ [Buy Fellowship Guide for $99]                                │
+└────────────────────────────────────────────────────────────────┘
+
+Explore Scholarships (/scholarships)
+┌────────────────────────────────────────────────────────────────┐
+│ List of scholarships (searchable, sortable)                   │
+│ [View Details]                                                │
+└────────────────────────────────────────────────────────────────┘
+
+Fellowship Guide (/product)
+┌────────────────────────────────────────────────────────────────┐
+│ Learn how to prepare, apply, and execute plans                │
+│ [Buy for $99] (Stripe Checkout)                               │
+└────────────────────────────────────────────────────────────────┘
+
+Dashboard (/home)
+┌────────────────────────────────────────────────────────────────┐
+│ Access exclusive tips, guides, and your bookmarked items      │
+│ [View Bookmarks] [Explore More Scholarships]                  │
+└────────────────────────────────────────────────────────────────┘
+
+FLOW:
+-----
+1. Landing Page: Users can sign in via Google, explore scholarships, 
+   or purchase the fellowship guide.
+2. Scholarship Details: Users can search and bookmark scholarships 
+   for later.
+3. Purchase Guide: Users are directed to Stripe for secure payment.
+4. Dashboard: Access to personalized content for logged-in, paying users.
+
+=======================================================================
+                           DEVELOPMENT NOTES                         
+=======================================================================
+
+TESTING:
+--------
+Run all tests:
+rails test
+
+LINTING:
+--------
+Ensure code adheres to style guidelines:
+rubocop
+
+CONTINUOUS INTEGRATION:
+-----------------------
+GitHub Actions are set up to:
+- Lint Ruby and JavaScript files.
+- Run tests on every push to the `main` branch.
+
+=======================================================================
+                          CONTRIBUTION GUIDELINES                     
+=======================================================================
+
+We welcome contributions! Please fork the repository, create a feature 
+branch, and submit a pull request. Follow the style guidelines and 
+include tests for new features.
+
+
+=======================================================================
+                          HAPPY HACKING! 🎉                           
+=======================================================================
