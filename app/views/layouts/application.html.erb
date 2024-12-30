@@ -1,64 +1,100 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>F-RAD - Find and Research Academic Degrees</title>
+    <title><%= content_for(:title) || "F-RAD" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <%= yield :head %>
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+
+    <style>
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        text-decoration: none;
+      }
+
+      .navbar-brand:hover {
+        color: #007bff;
+      }
+
+      .sign-in-btn {
+        padding: 0.5rem 1.5rem;
+        border: none;
+        border-radius: 20px;
+        background: #007bff;
+        color: white;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.2s;
+      }
+
+      .sign-in-btn:hover {
+        background: #0056b3;
+      }
+
+      .sign-out-btn {
+        padding: 0.5rem 1.5rem;
+        border: 1px solid #dc3545;
+        border-radius: 20px;
+        background: white;
+        color: #dc3545;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
+
+      .sign-out-btn:hover {
+        background: #dc3545;
+        color: white;
+      }
+    </style>
   </head>
 
   <body>
-    <%= render 'shared/navbar' %>
-    
-    <% if flash[:notice] %>
-      <div class="alert alert-success">
-        <%= flash[:notice] %>
+    <nav class="navbar">
+      <%= link_to root_path, class: "navbar-brand" do %>
+        🎓 F-RAD
+      <% end %>
+
+      <div>
+        <% if session[:user_id] %>
+          <%= button_to "Sign Out", logout_path, method: :delete, class: "sign-out-btn" %>
+        <% else %>
+          <button onclick="showPremiumModal()" class="sign-in-btn">Sign In</button>
+        <% end %>
       </div>
-    <% end %>
-    
-    <% if flash[:alert] %>
-      <div class="alert alert-danger">
-        <%= flash[:alert] %>
-      </div>
-    <% end %>
+    </nav>
 
-    <main class="container">
-      <%= yield %>
-    </main>
+    <%= yield %>
 
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    <script>
+      function showPremiumModal() {
+        const modal = document.getElementById('premium-features-modal');
+        if (modal) {
+          modal.style.display = 'block';
+        }
       }
-
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 2rem;
-      }
-
-      .alert {
-        padding: 1rem 2rem;
-        margin: 1rem 0;
-        border-radius: 4px;
-      }
-
-      .alert-success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-      }
-
-      .alert-danger {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-      }
-    </style>
+    </script>
   </body>
 </html>

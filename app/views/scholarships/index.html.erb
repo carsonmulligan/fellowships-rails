@@ -37,12 +37,10 @@
           <% end %>
         </div>
         <div class="action-buttons">
-          <% if session[:user_id] %>
-            <button class="bookmark-btn <%= 'active' if scholarship.bookmarks.exists?(user_id: session[:user_id]) %>" 
-                    data-scholarship-id="<%= scholarship.id %>">
-              ⭐️ <%= scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'Bookmarked' : 'Bookmark' %>
-            </button>
-          <% end %>
+          <button class="bookmark-btn <%= session[:user_id] && scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'active' : '' %>" 
+                  data-scholarship-id="<%= scholarship.id %>">
+            ⭐️ <%= session[:user_id] && scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'Bookmarked' : 'Bookmark' %>
+          </button>
           <a href="<%= scholarship.url %>" target="_blank" class="apply-btn">Learn More</a>
         </div>
       </div>
@@ -50,11 +48,14 @@
   <% end %>
 </div>
 
+<%= render 'shared/premium_features_modal' %>
+
 <%= javascript_tag do %>
   document.addEventListener('DOMContentLoaded', function() {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const closeFiltersBtn = document.querySelector('.close-filters-btn');
     const scholarshipCards = document.querySelectorAll('.scholarship-card');
+    const modal = document.getElementById('premium-features-modal');
     let activeFilters = new Set();
     
     // Filter button click handler
@@ -115,14 +116,17 @@
     bookmarkBtns.forEach(btn => {
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
-        const scholarshipId = this.dataset.scholarshipId;
-        const isBookmarked = this.classList.contains('active');
         
-        if (!window.currentUser) {
-          const modal = document.getElementById('premium-features-modal');
-          if (modal) modal.style.display = 'block';
+        // Check if user is authenticated
+        if (!<%= !!session[:user_id] %>) {
+          if (modal) {
+            modal.style.display = 'block';
+          }
           return;
         }
+        
+        const scholarshipId = this.dataset.scholarshipId;
+        const isBookmarked = this.classList.contains('active');
         
         const method = isBookmarked ? 'DELETE' : 'POST';
         const url = isBookmarked ? `/bookmarks/${scholarshipId}` : '/bookmarks';
@@ -137,7 +141,7 @@
         })
         .then(response => response.json())
         .then(data => {
-          if (data.success) {
+          if (data.status === 'success') {
             this.classList.toggle('active');
             this.textContent = isBookmarked ? '⭐️ Bookmark' : '⭐️ Bookmarked';
             
@@ -155,5 +159,12 @@
         });
       });
     });
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    };
   });
 <% end %> 
