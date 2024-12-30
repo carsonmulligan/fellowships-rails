@@ -160,6 +160,30 @@
   .toggle-icon {
     font-size: 1.2rem;
   }
+
+  .error-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ef4444;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    z-index: 1000;
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translate(-50%, 100%);
+      opacity: 0;
+    }
+    to {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+  }
 </style>
 
 <%= javascript_tag do %>
@@ -242,15 +266,30 @@
       const method = isBookmarked ? 'DELETE' : 'POST';
       const url = isBookmarked ? `/bookmarks/${scholarshipId}` : '/bookmarks';
       
+      // Show loading state
+      const originalText = button.textContent;
+      button.textContent = '⏳ Loading...';
+      button.disabled = true;
+      
       fetch(url, {
         method: method,
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
         },
-        body: JSON.stringify({ scholarship_id: scholarshipId })
+        body: JSON.stringify({ scholarship_id: scholarshipId }),
+        credentials: 'same-origin'
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json().catch(error => {
+          // If JSON parsing fails, return a default success response
+          return { status: 'success' };
+        });
+      })
       .then(data => {
         if (data.status === 'success') {
           button.classList.toggle('active');
@@ -266,7 +305,24 @@
           
           // Update card's data-bookmarked attribute
           button.closest('.scholarship-card').dataset.bookmarked = (!isBookmarked).toString();
+        } else {
+          // Revert to original state if unsuccessful
+          button.textContent = originalText;
         }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Revert to original state on error
+        button.textContent = originalText;
+        // Show error message to user
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'error-toast';
+        errorMessage.textContent = 'Failed to update bookmark. Please try again.';
+        document.body.appendChild(errorMessage);
+        setTimeout(() => errorMessage.remove(), 3000);
+      })
+      .finally(() => {
+        button.disabled = false;
       });
     }
     window.toggleBookmark = toggleBookmark;

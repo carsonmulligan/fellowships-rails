@@ -1,4 +1,5 @@
 git config --global alias.ai '!git add . && ai-commit --emoji --force'
+git config --global alias.airs '!git add . && ai-commit --emoji --force && rails s'
 git config --global alias.cmp '!git checkout main && git pull'
 git config --global alias.pom '!git push origin main'
 git config --global alias.pomc '!git push origin main && clear'
