@@ -6,488 +6,309 @@
 <!-- Premium Features Modal -->
 <div id="premium-features-modal" class="modal">
   <div class="modal-content">
-    <button class="close-btn" onclick="closeModal()">&times;</button>
+    <button class="modal-close" onclick="closeModal()">×</button>
     
-    <div class="modal-grid">
-      <!-- Left Panel - Scrollable Content -->
-      <div class="modal-left">
-        <h2 class="section-title">What Our Users Say</h2>
+    <div class="modal-sections">
+      <div class="testimonials-section">
+        <h2>What Our Users Say</h2>
         
+        <div class="video-container" onclick="playVideo()">
+          <img src="https://img.youtube.com/vi/UVtrvArSihQ/maxresdefault.jpg" alt="Video thumbnail" class="video-thumbnail">
+          <div class="play-button">▶</div>
+          <div id="video-iframe-container"></div>
+        </div>
+
         <div class="testimonial">
           <p>"This platform helped me find and win multiple scholarships!"</p>
           <cite>- Sarah K., Harvard '23</cite>
         </div>
-        
+
         <div class="testimonial">
           <p>"The tracking features made managing multiple applications so much easier."</p>
           <cite>- James L., Oxford '22</cite>
         </div>
-
-        <div class="stats">
-          <div class="stat-item">
-            <h3>1000+</h3>
-            <p>Active Scholarships</p>
-          </div>
-          <div class="stat-item">
-            <h3>50+</h3>
-            <p>Countries</p>
-          </div>
-          <div class="stat-item">
-            <h3>10,000+</h3>
-            <p>Happy Students</p>
-          </div>
-        </div>
-
-        <div class="features-list">
-          <div class="feature">
-            <h3>🔍 Smart Search</h3>
-            <p>Find scholarships matching your profile and interests</p>
-          </div>
-          <div class="feature">
-            <h3>⭐️ Bookmarking</h3>
-            <p>Save and organize your favorite opportunities</p>
-          </div>
-          <div class="feature">
-            <h3>🔔 Notifications</h3>
-            <p>Never miss deadlines with smart alerts</p>
-          </div>
-        </div>
       </div>
 
-      <!-- Right Panel - Fixed Content -->
-      <div class="modal-right">
-        <div class="video-container" onclick="playVideo(this)">
-          <img src="https://img.youtube.com/vi/UVtrvArSihQ/maxresdefault.jpg" alt="Video Thumbnail" class="video-thumbnail">
-          <div class="play-overlay">
-            <div class="play-button">
-              <svg viewBox="0 0 24 24" fill="white" width="48" height="48">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            </div>
-          </div>
+      <div class="membership-section">
+        <h2>Fellows Membership</h2>
+        <p class="one-time">One-time payment. Then never again.</p>
+        
+        <div class="pricing">
+          <span class="original-price">$200.00</span>
+          <span class="discount-badge">50% OFF</span>
+          <span class="final-price">$100.00</span>
         </div>
 
-        <div class="membership-details">
-          <h2>Fellows Membership</h2>
-          <p class="membership-subtitle">One-time payment. Then never again.</p>
-          
-          <div class="price-tag">
-            <span class="original-price">$200.00</span>
-            <span class="discount">50% OFF</span>
-            <span class="final-price">$100.00</span>
-          </div>
-
-          <div class="email-section">
-            <input type="email" id="premium-email" class="email-input" placeholder="Enter your email...">
-          </div>
-
-          <button onclick="handlePurchase()" class="purchase-btn">
-            Join Fellows →
-          </button>
+        <div class="email-section">
+          <input type="email" id="premium-email" class="email-input" placeholder="Enter your email...">
         </div>
+
+        <button onclick="handleJoinFellows()" class="join-button">
+          Join Fellows →
+        </button>
       </div>
     </div>
   </div>
 </div>
 
 <style>
-  .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.75);
-    z-index: 1000;
-    backdrop-filter: blur(5px);
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-content {
+  position: relative;
+  background: white;
+  margin: 5vh auto;
+  padding: 2rem;
+  width: 90%;
+  max-width: 800px;
+  border-radius: 12px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  z-index: 1001;
+}
+
+.modal-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  transition: all 0.2s;
+}
+
+.video-container:hover .play-button {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.testimonial {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.testimonial p {
+  font-size: 1.1rem;
+  color: #333;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.testimonial cite {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.membership-section {
+  text-align: center;
+}
+
+.one-time {
+  color: #666;
+  margin: 1rem 0;
+}
+
+.pricing {
+  margin: 1.5rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 1.2rem;
+}
+
+.discount-badge {
+  background: #ffd700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.final-price {
+  color: #28a745;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.email-section {
+  margin: 1.5rem 0;
+}
+
+.email-input {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.join-button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.join-button:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+@media (min-width: 768px) {
+  .modal-sections {
+    flex-direction: row;
   }
-
-  .modal-content {
-    position: relative;
-    background: white;
-    margin: 2% auto;
-    max-width: 1000px;
-    width: 90%;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  
+  .testimonials-section,
+  .membership-section {
+    flex: 1;
   }
-
-  .close-btn {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #333;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-  }
-
-  .close-btn:hover {
-    background: #fff;
-    transform: scale(1.1);
-  }
-
-  .modal-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 600px;
-  }
-
-  .modal-left {
-    padding: 2.5rem;
-    overflow-y: auto;
-    max-height: 80vh;
-    border-right: 1px solid #eee;
-  }
-
-  .modal-right {
-    padding: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    background: #f8f9fa;
-  }
-
-  .section-title {
-    font-size: 1.8rem;
-    color: #2c3e50;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-  }
-
-  .video-container {
-    width: 100%;
-    height: 250px;
-    border-radius: 15px;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-  }
-
-  .video-container:hover {
-    transform: translateY(-2px);
-  }
-
-  .video-thumbnail {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .play-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s ease;
-  }
-
-  .video-container:hover .play-overlay {
-    background: rgba(0, 0, 0, 0.5);
-  }
-
-  .play-button {
-    width: 70px;
-    height: 70px;
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease;
-  }
-
-  .video-container:hover .play-button {
-    transform: scale(1.1);
-  }
-
-  .membership-details {
-    text-align: center;
-    padding: 1.5rem;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
-
-  .membership-subtitle {
-    color: #666;
-    font-size: 1.1rem;
-    margin: 0.5rem 0 1.5rem;
-  }
-
-  .price-tag {
-    margin: 1.5rem 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-  }
-
-  .original-price {
-    text-decoration: line-through;
-    color: #666;
-    font-size: 1.2rem;
-  }
-
-  .discount {
-    background: #ffd700;
-    padding: 0.3rem 0.8rem;
-    border-radius: 6px;
-    font-weight: bold;
-    font-size: 0.9rem;
-    color: #000;
-  }
-
-  .final-price {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #28a745;
-  }
-
-  .email-section {
-    margin: 1.5rem 0;
-  }
-
-  .email-input {
-    width: 100%;
-    padding: 1rem 1.2rem;
-    border: 2px solid #e9ecef;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    transition: border-color 0.2s ease;
-  }
-
-  .email-input:focus {
-    outline: none;
-    border-color: #28a745;
-  }
-
-  .purchase-btn {
-    width: 100%;
-    padding: 1rem;
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .purchase-btn:hover {
-    background: #218838;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
-  }
-
-  .testimonial {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-
-  .testimonial p {
-    font-style: italic;
-    margin-bottom: 0.8rem;
-    color: #2c3e50;
-    font-size: 1.1rem;
-    line-height: 1.6;
-  }
-
-  .testimonial cite {
-    color: #666;
-    font-size: 0.95rem;
-  }
-
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin: 2rem 0;
-    text-align: center;
-  }
-
-  .stat-item {
-    background: white;
-    padding: 1.2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-
-  .stat-item h3 {
-    font-size: 2rem;
-    color: #007bff;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-  }
-
-  .stat-item p {
-    color: #666;
-    font-size: 0.9rem;
-  }
-
-  .features-list {
-    margin-top: 2rem;
-  }
-
-  .feature {
-    background: white;
-    padding: 1.2rem;
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease;
-  }
-
-  .feature:hover {
-    transform: translateY(-2px);
-  }
-
-  .feature h3 {
-    margin-bottom: 0.5rem;
-    color: #2c3e50;
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-
-  .feature p {
-    color: #666;
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-
-  @media (max-width: 768px) {
-    .modal-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .modal-left {
-      max-height: none;
-      border-right: none;
-      border-bottom: 1px solid #eee;
-    }
-
-    .stats {
-      grid-template-columns: 1fr;
-    }
-  }
+}
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Pre-fill email from localStorage if available
-    const storedEmail = localStorage.getItem('user_email');
-    if (storedEmail) {
-      const emailInput = document.getElementById('premium-email');
-      if (emailInput) {
-        emailInput.value = storedEmail;
-      }
+function closeModal() {
+  const modal = document.getElementById('premium-features-modal');
+  modal.style.display = 'none';
+  
+  // Reset video if it's playing
+  const videoContainer = document.getElementById('video-iframe-container');
+  videoContainer.innerHTML = '';
+}
+
+function playVideo() {
+  const videoContainer = document.getElementById('video-iframe-container');
+  const thumbnail = document.querySelector('.video-thumbnail');
+  const playButton = document.querySelector('.play-button');
+  
+  // Hide thumbnail and play button
+  thumbnail.style.display = 'none';
+  playButton.style.display = 'none';
+  
+  // Create and add iframe
+  const iframe = document.createElement('iframe');
+  iframe.setAttribute('width', '100%');
+  iframe.setAttribute('height', '315');
+  iframe.setAttribute('src', 'https://www.youtube.com/embed/UVtrvArSihQ?autoplay=1');
+  iframe.setAttribute('frameborder', '0');
+  iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+  iframe.setAttribute('allowfullscreen', '');
+  
+  videoContainer.appendChild(iframe);
+}
+
+function handleJoinFellows() {
+  const emailInput = document.getElementById('premium-email');
+  const email = emailInput.value.trim();
+  
+  if (!email) {
+    alert('Please enter your email address.');
+    return;
+  }
+  
+  if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  // Create Stripe session
+  fetch('/create-checkout-session', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+    },
+    body: JSON.stringify({
+      email: email
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.url) {
+      window.location.href = data.url;
+    } else if (data.error) {
+      alert(data.error);
     }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Something went wrong. Please try again.');
   });
+}
 
-  function closeModal() {
-    const modal = document.getElementById('premium-features-modal');
-    if (modal) {
-      modal.style.display = 'none';
-      
-      // Reset video if it's playing
-      const videoContainer = modal.querySelector('.video-container');
-      if (videoContainer) {
-        const iframe = videoContainer.querySelector('iframe');
-        if (iframe) {
-          videoContainer.innerHTML = `
-            <img src="https://img.youtube.com/vi/UVtrvArSihQ/maxresdefault.jpg" alt="Video Thumbnail" class="video-thumbnail">
-            <div class="play-overlay">
-              <div class="play-button">
-                <svg viewBox="0 0 24 24" fill="white" width="48" height="48">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </div>
-            </div>
-          `;
-        }
-      }
-    }
+// Show modal function
+function showPremiumModal() {
+  const modal = document.getElementById('premium-features-modal');
+  modal.style.display = 'block';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('premium-features-modal');
+  if (event.target == modal) {
+    closeModal();
   }
-
-  function playVideo(container) {
-    const iframe = document.createElement('iframe');
-    iframe.setAttribute('src', 'https://www.youtube.com/embed/UVtrvArSihQ?autoplay=1');
-    iframe.setAttribute('frameborder', '0');
-    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
-    iframe.style.borderRadius = '15px';
-
-    container.innerHTML = '';
-    container.appendChild(iframe);
-  }
-
-  function handlePurchase() {
-    const email = document.getElementById('premium-email').value;
-    if (!email || !email.includes('@')) {
-      alert('Please enter a valid email address');
-      return;
-    }
-
-    // Store email in localStorage
-    localStorage.setItem('user_email', email);
-
-    // Create Stripe session
-    fetch('/create-checkout-session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-      },
-      body: JSON.stringify({
-        email: email
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.url) {
-        window.location.href = data.url;
-      } else if (data.error) {
-        alert(data.error);
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Something went wrong. Please try again.');
-    });
-  }
-
-  // Close modal when clicking outside
-  window.onclick = function(event) {
-    const modal = document.getElementById('premium-features-modal');
-    if (event.target == modal) {
-      closeModal();
-    }
-  }
+}
 </script>
 
 <!-- Add Stripe.js --> 
