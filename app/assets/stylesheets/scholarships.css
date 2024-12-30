@@ -131,4 +131,35 @@
 
 .apply-btn:hover {
   background: #1976d2;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.bookmark-btn {
+  padding: 0.5rem 1rem;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #666;
+}
+
+.bookmark-btn:hover {
+  background: #e9ecef;
+}
+
+.bookmark-btn.active {
+  background: #ffd700;
+  border-color: #ffd700;
+  color: #000;
+}
+
+.bookmark-btn.active:hover {
+  background: #ffc107;
+  border-color: #ffc107;
 } 

@@ -10,9 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_12_29_211257) do
+ActiveRecord::Schema[7.2].define(version: 2024_12_30_005255) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bookmarks", force: :cascade do |t|
+    t.string "user_id"
+    t.bigint "scholarship_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scholarship_id"], name: "index_bookmarks_on_scholarship_id"
+  end
 
   create_table "payments", force: :cascade do |t|
     t.string "user_id"
@@ -34,4 +42,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_29_211257) do
     t.string "tags", default: [], array: true
     t.index ["tags"], name: "index_scholarships_on_tags", using: :gin
   end
+
+  add_foreign_key "bookmarks", "scholarships"
 end
