@@ -1,7 +1,7 @@
 class BookmarksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create, :destroy]
-  allow_browser versions: { chrome: 90, firefox: 90, safari: 14 }
-
+  skip_before_action :verify_browser_support, if: -> { request.format.json? }
+  
   before_action :require_login
 
   def index
@@ -15,10 +15,14 @@ class BookmarksController < ApplicationController
       scholarship_id: params[:scholarship_id]
     )
 
-    if @bookmark.save
-      render json: { status: 'success' }
-    else
-      render json: { status: 'error', message: @bookmark.errors.full_messages }, status: :unprocessable_entity
+    respond_to do |format|
+      if @bookmark.save
+        format.json { render json: { status: 'success' }, status: :ok }
+        format.html { redirect_back(fallback_location: root_path) }
+      else
+        format.json { render json: { status: 'error', message: @bookmark.errors.full_messages }, status: :unprocessable_entity }
+        format.html { redirect_back(fallback_location: root_path, alert: @bookmark.errors.full_messages.join(", ")) }
+      end
     end
   end
 
@@ -28,10 +32,14 @@ class BookmarksController < ApplicationController
       scholarship_id: params[:id]
     )
 
-    if @bookmark&.destroy
-      render json: { status: 'success' }
-    else
-      render json: { status: 'error' }, status: :unprocessable_entity
+    respond_to do |format|
+      if @bookmark&.destroy
+        format.json { render json: { status: 'success' }, status: :ok }
+        format.html { redirect_back(fallback_location: root_path) }
+      else
+        format.json { render json: { status: 'error' }, status: :unprocessable_entity }
+        format.html { redirect_back(fallback_location: root_path, alert: "Unable to remove bookmark") }
+      end
     end
   end
 
@@ -39,7 +47,10 @@ class BookmarksController < ApplicationController
 
   def require_login
     unless current_user
-      redirect_to root_path, notice: "Please sign in first"
+      respond_to do |format|
+        format.json { render json: { status: 'error', message: 'Please sign in first' }, status: :unauthorized }
+        format.html { redirect_to root_path, notice: "Please sign in first" }
+      end
     end
   end
 end
