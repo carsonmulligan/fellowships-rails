@@ -21,34 +21,72 @@
     <div class="scholarship-card" 
          data-tags="<%= scholarship.tags.join(' ') %>"
          data-bookmarked="<%= scholarship.bookmarks.exists?(user_id: session[:user_id]) %>">
-      <div class="card-header">
-        <h3><%= scholarship.name %></h3>
-        <div class="due-date">Due: <%= scholarship.due_date %></div>
-      </div>
-      
-      <div class="card-body">
-        <p><%= truncate(scholarship.description, length: 150) %></p>
-      </div>
+      <%= link_to scholarship_path(scholarship), class: "card-link" do %>
+        <div class="card-header">
+          <h3><%= scholarship.name %></h3>
+          <div class="due-date">Due: <%= scholarship.due_date %></div>
+        </div>
+        
+        <div class="card-body">
+          <p><%= truncate(scholarship.description, length: 150) %></p>
+        </div>
 
-      <div class="card-footer">
-        <div class="tags">
-          <% scholarship.tags.each do |tag| %>
-            <span class="tag"><%= get_emoji(tag) %> <%= tag.titleize %></span>
-          <% end %>
+        <div class="card-footer">
+          <div class="tags">
+            <% scholarship.tags.each do |tag| %>
+              <span class="tag"><%= get_emoji(tag) %> <%= tag.titleize %></span>
+            <% end %>
+          </div>
+          <div class="action-buttons">
+            <button class="bookmark-btn <%= session[:user_id] && scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'active' : '' %>" 
+                    data-scholarship-id="<%= scholarship.id %>"
+                    onclick="event.preventDefault(); toggleBookmark(this)">
+              ⭐️ <%= session[:user_id] && scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'Bookmarked' : 'Bookmark' %>
+            </button>
+            <button class="share-btn" 
+                    onclick="event.preventDefault(); shareScholarship('<%= scholarship_url(scholarship) %>')"
+                    data-scholarship-id="<%= scholarship.id %>">
+              🔗 Share
+            </button>
+          </div>
         </div>
-        <div class="action-buttons">
-          <button class="bookmark-btn <%= session[:user_id] && scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'active' : '' %>" 
-                  data-scholarship-id="<%= scholarship.id %>">
-            ⭐️ <%= session[:user_id] && scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'Bookmarked' : 'Bookmark' %>
-          </button>
-          <a href="<%= scholarship.url %>" target="_blank" class="apply-btn">Learn More</a>
-        </div>
-      </div>
+      <% end %>
     </div>
   <% end %>
 </div>
 
 <%= render 'shared/premium_features_modal' %>
+
+<style>
+  .card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .scholarship-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .scholarship-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .share-btn {
+    padding: 0.5rem 1rem;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .share-btn:hover {
+    background: #5a6268;
+  }
+</style>
 
 <%= javascript_tag do %>
   document.addEventListener('DOMContentLoaded', function() {
@@ -112,53 +150,68 @@
     });
     
     // Bookmark button click handler
-    const bookmarkBtns = document.querySelectorAll('.bookmark-btn');
-    bookmarkBtns.forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        
-        // Check if user is authenticated
-        if (!<%= !!session[:user_id] %>) {
-          if (modal) {
-            modal.style.display = 'block';
-          }
-          return;
+    function toggleBookmark(button) {
+      // Check if user is authenticated
+      if (!<%= !!session[:user_id] %>) {
+        if (modal) {
+          modal.style.display = 'block';
         }
-        
-        const scholarshipId = this.dataset.scholarshipId;
-        const isBookmarked = this.classList.contains('active');
-        
-        const method = isBookmarked ? 'DELETE' : 'POST';
-        const url = isBookmarked ? `/bookmarks/${scholarshipId}` : '/bookmarks';
-        
-        fetch(url, {
-          method: method,
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-          },
-          body: JSON.stringify({ scholarship_id: scholarshipId })
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === 'success') {
-            this.classList.toggle('active');
-            this.textContent = isBookmarked ? '⭐️ Bookmark' : '⭐️ Bookmarked';
-            
-            // Update bookmark count in filter pill
-            const bookmarkedFilter = document.querySelector('.filter-btn[data-filter="bookmarked"]');
-            if (bookmarkedFilter) {
-              const currentCount = parseInt(bookmarkedFilter.textContent.match(/\d+/)[0]);
-              const newCount = isBookmarked ? currentCount - 1 : currentCount + 1;
-              bookmarkedFilter.textContent = `⭐️ Bookmarked (${newCount})`;
-            }
-            
-            // Update card's data-bookmarked attribute
-            this.closest('.scholarship-card').dataset.bookmarked = (!isBookmarked).toString();
+        return;
+      }
+      
+      const scholarshipId = button.dataset.scholarshipId;
+      const isBookmarked = button.classList.contains('active');
+      
+      const method = isBookmarked ? 'DELETE' : 'POST';
+      const url = isBookmarked ? `/bookmarks/${scholarshipId}` : '/bookmarks';
+      
+      fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ scholarship_id: scholarshipId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          button.classList.toggle('active');
+          button.textContent = isBookmarked ? '⭐️ Bookmark' : '⭐️ Bookmarked';
+          
+          // Update bookmark count in filter pill
+          const bookmarkedFilter = document.querySelector('.filter-btn[data-filter="bookmarked"]');
+          if (bookmarkedFilter) {
+            const currentCount = parseInt(bookmarkedFilter.textContent.match(/\d+/)[0]);
+            const newCount = isBookmarked ? currentCount - 1 : currentCount + 1;
+            bookmarkedFilter.textContent = `⭐️ Bookmarked (${newCount})`;
           }
-        });
+          
+          // Update card's data-bookmarked attribute
+          button.closest('.scholarship-card').dataset.bookmarked = (!isBookmarked).toString();
+        }
       });
-    });
+    }
+    window.toggleBookmark = toggleBookmark;
+
+    // Share scholarship function
+    window.shareScholarship = function(url) {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Check out this scholarship!',
+          url: url
+        }).catch(console.error);
+      } else {
+        navigator.clipboard.writeText(url).then(() => {
+          const shareBtn = event.target;
+          const originalText = shareBtn.textContent;
+          shareBtn.textContent = '✓ Copied!';
+          setTimeout(() => {
+            shareBtn.textContent = originalText;
+          }, 2000);
+        });
+      }
+    };
 
     // Close modal when clicking outside
     window.onclick = function(event) {

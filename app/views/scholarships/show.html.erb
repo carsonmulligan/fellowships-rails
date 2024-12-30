@@ -1,0 +1,230 @@
+<div class="scholarship-show">
+  <div class="back-nav">
+    <%= link_to "← Back to All Scholarships", root_path, class: "back-link" %>
+  </div>
+
+  <div class="scholarship-content">
+    <h1><%= @scholarship.name %></h1>
+    
+    <div class="scholarship-meta">
+      <div class="meta-item">
+        <span class="meta-label">📅 Due Date:</span>
+        <span class="meta-value"><%= @scholarship.due_date %></span>
+      </div>
+    </div>
+
+    <div class="scholarship-description">
+      <h2>📝 Description</h2>
+      <p><%= @scholarship.description %></p>
+    </div>
+
+    <div class="scholarship-tags">
+      <h2>🏷️ Tags</h2>
+      <div class="tags">
+        <% @scholarship.tags.each do |tag| %>
+          <span class="tag"><%= get_emoji(tag) %> <%= tag.titleize %></span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="scholarship-share">
+      <h2>🔗 Share</h2>
+      <div class="share-url">
+        <input type="text" readonly value="<%= scholarship_url(@scholarship) %>" id="share-url" />
+        <button onclick="copyShareUrl()" class="copy-btn">Copy Link</button>
+      </div>
+    </div>
+
+    <div class="scholarship-actions">
+      <button class="bookmark-btn <%= @is_bookmarked ? 'active' : '' %>" 
+              data-scholarship-id="<%= @scholarship.id %>"
+              onclick="toggleBookmark(this)">
+        ⭐️ <%= @is_bookmarked ? 'Bookmarked' : 'Bookmark' %>
+      </button>
+      <a href="<%= @scholarship.url %>" target="_blank" class="apply-btn">🌐 Apply Now</a>
+    </div>
+  </div>
+</div>
+
+<%= render 'shared/premium_features_modal' %>
+
+<style>
+  .scholarship-show {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .back-nav {
+    margin-bottom: 2rem;
+  }
+
+  .back-link {
+    color: #666;
+    text-decoration: none;
+    font-size: 1.1rem;
+  }
+
+  .back-link:hover {
+    color: #333;
+  }
+
+  .scholarship-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+
+  .scholarship-meta {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .meta-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .meta-label {
+    font-weight: bold;
+    color: #666;
+  }
+
+  .scholarship-description,
+  .scholarship-tags,
+  .scholarship-share {
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #444;
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    padding: 0.5rem 1rem;
+    background: #f0f0f0;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  .share-url {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .share-url input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .copy-btn {
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .copy-btn:hover {
+    background: #0056b3;
+  }
+
+  .scholarship-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .bookmark-btn,
+  .apply-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .bookmark-btn {
+    background: white;
+    border: 2px solid #ffd700;
+    color: #333;
+  }
+
+  .bookmark-btn.active {
+    background: #ffd700;
+  }
+
+  .apply-btn {
+    background: #28a745;
+    border: none;
+    color: white;
+    text-decoration: none;
+  }
+
+  .apply-btn:hover {
+    background: #218838;
+  }
+</style>
+
+<script>
+  function copyShareUrl() {
+    const shareUrl = document.getElementById('share-url');
+    shareUrl.select();
+    document.execCommand('copy');
+    
+    // Show feedback
+    const copyBtn = document.querySelector('.copy-btn');
+    const originalText = copyBtn.textContent;
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => {
+      copyBtn.textContent = originalText;
+    }, 2000);
+  }
+
+  function toggleBookmark(button) {
+    // Check if user is authenticated
+    if (!<%= !!session[:user_id] %>) {
+      const modal = document.getElementById('premium-features-modal');
+      if (modal) {
+        modal.style.display = 'block';
+      }
+      return;
+    }
+
+    const scholarshipId = button.dataset.scholarshipId;
+    const isBookmarked = button.classList.contains('active');
+    
+    const method = isBookmarked ? 'DELETE' : 'POST';
+    const url = isBookmarked ? `/bookmarks/${scholarshipId}` : '/bookmarks';
+    
+    fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ scholarship_id: scholarshipId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        button.classList.toggle('active');
+        button.textContent = isBookmarked ? '⭐️ Bookmark' : '⭐️ Bookmarked';
+      }
+    });
+  }
+</script> 
