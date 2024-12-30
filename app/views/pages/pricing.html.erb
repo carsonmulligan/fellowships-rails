@@ -1,0 +1,157 @@
+<div class="pricing-page">
+  <div class="pricing-header">
+    <h1>Choose Your Plan</h1>
+    <p>Get access to premium features and find your perfect scholarship</p>
+  </div>
+
+  <div class="pricing-card">
+    <div class="plan-header">
+      <h2>Premium Plan</h2>
+      <div class="price">
+        <span class="amount">$9.99</span>
+        <span class="period">/month</span>
+      </div>
+    </div>
+
+    <div class="features">
+      <h3>Everything you need to succeed:</h3>
+      <ul>
+        <li>⭐️ Bookmark Unlimited Scholarships</li>
+        <li>📝 Track All Your Applications</li>
+        <li>🔔 Get Real-time Notifications</li>
+        <li>💬 Access Community Chat</li>
+        <li>🎯 Smart Scholarship Matching</li>
+        <li>📊 Application Analytics</li>
+      </ul>
+    </div>
+
+    <button id="checkout-button" class="checkout-btn">
+      Start Premium Access
+    </button>
+  </div>
+</div>
+
+<style>
+.pricing-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.pricing-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.pricing-header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.pricing-header p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.pricing-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  text-align: center;
+}
+
+.plan-header {
+  margin-bottom: 2rem;
+}
+
+.plan-header h2 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.price {
+  font-size: 2.5rem;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.period {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.features {
+  text-align: left;
+  margin: 2rem 0;
+}
+
+.features h3 {
+  font-size: 1.2rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  margin: 1rem 0;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+.checkout-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+.checkout-btn:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const checkoutButton = document.getElementById('checkout-button');
+  
+  checkoutButton.addEventListener('click', function() {
+    fetch('/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      }
+    })
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(session) {
+      if (session.error) {
+        alert(session.error);
+      } else {
+        window.location.href = session.url;
+      }
+    })
+    .catch(function(error) {
+      console.error('Error:', error);
+      alert('Something went wrong. Please try again.');
+    });
+  });
+});
+</script> 

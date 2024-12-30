@@ -9,7 +9,8 @@ Rails.application.routes.draw do
   resources :scholarships, only: [:index, :show]
   resources :bookmarks, only: [:create, :destroy]
   
-  # Checkout routes
+  # Pricing and checkout routes
+  get '/pricing', to: 'pages#pricing'
   post '/create-checkout-session', to: 'checkout#create'
   get '/checkout/success', to: 'checkout#success'
   get '/checkout/cancel', to: 'checkout#cancel'
