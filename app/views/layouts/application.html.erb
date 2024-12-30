@@ -11,9 +11,20 @@
   </head>
 
   <body>
-    <%= render 'shared/navigation' %>
-    <%= render 'shared/flash' %>
+  <%= render 'shared/navigation' %>
+  <%= render 'shared/flash' %>
     <%= yield %>
     <%= render 'shared/premium_features_modal' %>
+
+    <% if params[:show_premium_modal] %>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const modal = document.getElementById('premium-features-modal');
+          if (modal) {
+            modal.style.display = 'block';
+          }
+        });
+      </script>
+    <% end %>
   </body>
 </html>
