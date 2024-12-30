@@ -1,147 +1,155 @@
-#######################################################################
-#                           Fellowships4You                          #
-#                       A Ruby on Rails Application                  #
-#                       ASCII-Style README                           #
-#######################################################################
+# 🎓 Fellowships4You 🌟
 
-Welcome to **Fellowships4You**, your gateway to academic excellence through 
-scholarships and fellowships! This application is designed with simplicity 
-and efficiency in mind. Below is a comprehensive guide to get started.
+```ascii
+ _____ _ _           _     _          _  _   __   
+|  ___| | | _____  _| |___| |__  _ __(_)| | / /_  
+| |_  | | |/ _ \ \/ / / __| '_ \| '_ \| | |/ / _` |
+|  _| | | |  __/>  <| \__ \ | | | |_) | |   < (_| |
+|_|   |_|_|\___/_/\_\_|___/_| |_| .__/|_|_|\_\__,_|
+                                |_|    4You
+```
 
-=======================================================================
-                           SETUP INSTRUCTIONS                        
-=======================================================================
+> Your gateway to academic excellence through scholarships and fellowships! 🚀
 
-PREREQUISITES:
---------------
-Ensure you have the following installed:
-- Ruby 3.1.2
-- Rails 7.2.2
-- PostgreSQL
-- Node.js & Yarn
+## 📚 Table of Contents
+- [🛠️ Setup](#%EF%B8%8F-setup)
+- [🏗️ Project Structure](#%EF%B8%8F-project-structure)
+- [🧭 User Journey](#-user-journey)
+- [🧪 Development](#-development)
+- [👥 Contributing](#-contributing)
 
-CLONE THE REPOSITORY:
----------------------
-Run the following commands to clone and navigate into the project:
+## 🛠️ Setup
+
+### Prerequisites 📋
+```
+✨ Ruby 3.1.2
+🛤️ Rails 7.2.2
+🐘 PostgreSQL
+📦 Node.js & Yarn
+```
+
+### Quick Start 🚀
+
+1. **Clone & Install** 📥
+```bash
 git clone https://github.com/your-repo/fellowships4you.git
 cd fellowships4you
-
-INSTALL DEPENDENCIES:
----------------------
-Install Ruby and JavaScript dependencies:
 bundle install
 yarn install
+```
 
-DATABASE SETUP:
----------------
-Create and configure the database:
+2. **Database Setup** 🗄️
+```bash
 rails db:create
 rails db:migrate
+rails db:seed  # Optional: Add sample data
+```
 
-(Optional) Seed the database with initial data:
-rails db:seed
+3. **Environment Variables** 🔐
+Create `.env` in root directory:
+```env
+# 🔑 Google OAuth
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
 
-ENVIRONMENT VARIABLES:
-----------------------
-Set up a `.env` file in the root directory with the following content:
-# Google OAuth
-GOOGLE_CLIENT_ID=<your-google-client-id>
-GOOGLE_CLIENT_SECRET=<your-google-client-secret>
+# 💳 Stripe
+STRIPE_PUBLISHABLE_KEY=your-stripe-publishable-key
+STRIPE_SECRET_KEY=your-stripe-secret-key
+STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
+```
 
-# Stripe
-STRIPE_PUBLISHABLE_KEY=<your-stripe-publishable-key>
-STRIPE_SECRET_KEY=<your-stripe-secret-key>
-STRIPE_WEBHOOK_SECRET=<your-stripe-webhook-secret>
-
-START THE SERVER:
------------------
-Run the Rails server:
+4. **Launch** 🚀
+```bash
 rails server
+```
+Visit: http://localhost:3000 ✨
 
-Visit the app at: http://localhost:3000
+## 🏗️ Project Structure
 
-=======================================================================
-                           PROJECT STRUCTURE                          
-=======================================================================
+```ascii
+fellowships4you/
+├── 📁 app/               # Core application files
+│   ├── 📱 controllers/   # Request handling
+│   ├── 🎨 views/        # UI templates
+│   └── 🧬 models/       # Data & business logic
+├── 📁 config/           # App configuration
+├── 📁 db/               # Database files
+├── 📁 public/           # Static assets
+└── 📁 test/             # Test suite
+```
 
-APP STRUCTURE:
---------------
-- **app/**: Contains core application files (models, controllers, views, helpers).
-- **config/**: Configuration files for the app, including routes and database settings.
-- **public/**: Static files, error pages, and the manifest file.
-- **db/**: Migrations and schema files for the database.
-- **test/**: Test files for the application.
-- **notes/**: Project notes and related documents.
+## 🧭 User Journey
 
-=======================================================================
-                          USER JOURNEY OVERVIEW                       
-=======================================================================
+### Landing Page (/) 🏠
+```ascii
+┌────────────────────────────────────────────┐
+│     🎓 Fellowships4You                     │
+│  [🔑 Sign In with Google]                  │
+│  [🔍 Explore Scholarships]                 │
+│  [📚 Buy Fellowship Guide ($99)]           │
+└────────────────────────────────────────────┘
+```
 
-ASCII WIREFRAME:
-----------------
-Landing Page (/)
-┌────────────────────────────────────────────────────────────────┐
-│ Fellowships4You                                                │
-│ [Sign In with Google] [Explore Scholarships]                  │
-│ [Buy Fellowship Guide for $99]                                │
-└────────────────────────────────────────────────────────────────┘
+### Scholarships (/scholarships) 📜
+```ascii
+┌────────────────────────────────────────────┐
+│  🔍 Search Scholarships                    │
+│  ├── 📋 Filter by Field                   │
+│  ├── 🌍 Filter by Location                │
+│  └── 💰 Filter by Amount                  │
+│                                           │
+│  [⭐ Bookmark] [📤 Share] [📝 Apply]      │
+└────────────────────────────────────────────┘
+```
 
-Explore Scholarships (/scholarships)
-┌────────────────────────────────────────────────────────────────┐
-│ List of scholarships (searchable, sortable)                   │
-│ [View Details]                                                │
-└────────────────────────────────────────────────────────────────┘
+### User Dashboard (/home) 🎯
+```ascii
+┌────────────────────────────────────────────┐
+│  👋 Welcome back, Scholar!                 │
+│  ├── 📌 Bookmarked Scholarships           │
+│  ├── 📅 Upcoming Deadlines                │
+│  └── 📊 Application Progress              │
+└────────────────────────────────────────────┘
+```
 
-Fellowship Guide (/product)
-┌────────────────────────────────────────────────────────────────┐
-│ Learn how to prepare, apply, and execute plans                │
-│ [Buy for $99] (Stripe Checkout)                               │
-└────────────────────────────────────────────────────────────────┘
+## 🧪 Development
 
-Dashboard (/home)
-┌────────────────────────────────────────────────────────────────┐
-│ Access exclusive tips, guides, and your bookmarked items      │
-│ [View Bookmarks] [Explore More Scholarships]                  │
-└────────────────────────────────────────────────────────────────┘
+### Testing 🧪
+```bash
+rails test                 # Run all tests
+rails test:system         # Run system tests
+rails test:controllers    # Run controller tests
+```
 
-FLOW:
------
-1. Landing Page: Users can sign in via Google, explore scholarships, 
-   or purchase the fellowship guide.
-2. Scholarship Details: Users can search and bookmark scholarships 
-   for later.
-3. Purchase Guide: Users are directed to Stripe for secure payment.
-4. Dashboard: Access to personalized content for logged-in, paying users.
+### Code Quality 🎯
+```bash
+rubocop                   # Ruby linting
+yarn lint                 # JavaScript linting
+```
 
-=======================================================================
-                           DEVELOPMENT NOTES                         
-=======================================================================
+### CI/CD Pipeline 🔄
+- 🔍 Automated testing on push
+- 🎯 Code quality checks
+- 🚀 Automated deployment
 
-TESTING:
---------
-Run all tests:
-rails test
+## 👥 Contributing
 
-LINTING:
---------
-Ensure code adheres to style guidelines:
-rubocop
+1. 🍴 Fork the repository
+2. 🌿 Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. 💾 Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. 🚀 Push to branch (`git push origin feature/AmazingFeature`)
+5. 🎯 Open a Pull Request
 
-CONTINUOUS INTEGRATION:
------------------------
-GitHub Actions are set up to:
-- Lint Ruby and JavaScript files.
-- Run tests on every push to the `main` branch.
+## 📝 License
 
-=======================================================================
-                          CONTRIBUTION GUIDELINES                     
-=======================================================================
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-We welcome contributions! Please fork the repository, create a feature 
-branch, and submit a pull request. Follow the style guidelines and 
-include tests for new features.
+---
 
+<div align="center">
 
-=======================================================================
-                          HAPPY HACKING! 🎉                           
-=======================================================================
+🌟 **Happy Scholarship Hunting!** 🌟
+
+Made with ❤️ by the Fellowships4You Team
+
+</div>
