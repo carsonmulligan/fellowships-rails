@@ -6,12 +6,12 @@
 <!-- Premium Features Modal -->
 <div id="premium-features-modal" class="modal">
   <div class="modal-content">
-    <span class="close-btn">&times;</span>
+    <button class="close-btn" onclick="closeModal()">&times;</button>
     
     <div class="modal-grid">
       <!-- Left Panel - Scrollable Content -->
       <div class="modal-left">
-        <h2>What Our Users Say</h2>
+        <h2 class="section-title">What Our Users Say</h2>
         
         <div class="testimonial">
           <p>"This platform helped me find and win multiple scholarships!"</p>
@@ -56,13 +56,20 @@
 
       <!-- Right Panel - Fixed Content -->
       <div class="modal-right">
-        <div class="video-container">
-          <div class="play-button">▶️</div>
+        <div class="video-container" onclick="playVideo(this)">
+          <img src="https://img.youtube.com/vi/UVtrvArSihQ/maxresdefault.jpg" alt="Video Thumbnail" class="video-thumbnail">
+          <div class="play-overlay">
+            <div class="play-button">
+              <svg viewBox="0 0 24 24" fill="white" width="48" height="48">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+          </div>
         </div>
 
         <div class="membership-details">
           <h2>Fellows Membership</h2>
-          <p>One-time payment. Then never again.</p>
+          <p class="membership-subtitle">One-time payment. Then never again.</p>
           
           <div class="price-tag">
             <span class="original-price">$200.00</span>
@@ -91,8 +98,9 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.75);
     z-index: 1000;
+    backdrop-filter: blur(5px);
   }
 
   .modal-content {
@@ -101,18 +109,34 @@
     margin: 2% auto;
     max-width: 1000px;
     width: 90%;
-    border-radius: 12px;
+    border-radius: 20px;
     overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   }
 
   .close-btn {
     position: absolute;
-    right: 30px;
-    top: 25px;
+    right: 20px;
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
     font-size: 24px;
     cursor: pointer;
     z-index: 10;
-    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+
+  .close-btn:hover {
+    background: #fff;
+    transform: scale(1.1);
   }
 
   .modal-grid {
@@ -122,40 +146,92 @@
   }
 
   .modal-left {
-    padding: 2rem;
+    padding: 2.5rem;
     overflow-y: auto;
     max-height: 80vh;
     border-right: 1px solid #eee;
   }
 
   .modal-right {
-    padding: 2rem;
+    padding: 2.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
+    background: #f8f9fa;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
   }
 
   .video-container {
     width: 100%;
     height: 250px;
-    background: #000;
-    border-radius: 12px;
+    border-radius: 15px;
     position: relative;
-    margin-bottom: 1rem;
+    overflow: hidden;
     cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+  }
+
+  .video-container:hover {
+    transform: translateY(-2px);
+  }
+
+  .video-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+  }
+
+  .video-container:hover .play-overlay {
+    background: rgba(0, 0, 0, 0.5);
   }
 
   .play-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 3rem;
-    color: white;
+    width: 70px;
+    height: 70px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+
+  .video-container:hover .play-button {
+    transform: scale(1.1);
   }
 
   .membership-details {
     text-align: center;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .membership-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    margin: 0.5rem 0 1.5rem;
   }
 
   .price-tag {
@@ -169,17 +245,20 @@
   .original-price {
     text-decoration: line-through;
     color: #666;
+    font-size: 1.2rem;
   }
 
   .discount {
     background: #ffd700;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
     font-weight: bold;
+    font-size: 0.9rem;
+    color: #000;
   }
 
   .final-price {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
     color: #28a745;
   }
@@ -190,10 +269,16 @@
 
   .email-input {
     width: 100%;
-    padding: 1rem;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
     font-size: 1.1rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .email-input:focus {
+    outline: none;
+    border-color: #28a745;
   }
 
   .purchase-btn {
@@ -202,7 +287,7 @@
     background: #28a745;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 1.2rem;
     font-weight: 600;
     cursor: pointer;
@@ -211,37 +296,56 @@
 
   .purchase-btn:hover {
     background: #218838;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
   }
 
   .testimonial {
-    background: #f8f9fa;
+    background: white;
     padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
 
   .testimonial p {
     font-style: italic;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    line-height: 1.6;
   }
 
   .testimonial cite {
     color: #666;
+    font-size: 0.95rem;
   }
 
   .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    gap: 1.5rem;
     margin: 2rem 0;
     text-align: center;
   }
 
+  .stat-item {
+    background: white;
+    padding: 1.2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
   .stat-item h3 {
-    font-size: 1.8rem;
+    font-size: 2rem;
     color: #007bff;
     margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .stat-item p {
+    color: #666;
+    font-size: 0.9rem;
   }
 
   .features-list {
@@ -249,12 +353,45 @@
   }
 
   .feature {
-    margin-bottom: 1.5rem;
+    background: white;
+    padding: 1.2rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+  }
+
+  .feature:hover {
+    transform: translateY(-2px);
   }
 
   .feature h3 {
     margin-bottom: 0.5rem;
-    color: #333;
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .feature p {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .modal-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .modal-left {
+      max-height: none;
+      border-right: none;
+      border-bottom: 1px solid #eee;
+    }
+
+    .stats {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
@@ -270,12 +407,54 @@
     }
   });
 
+  function closeModal() {
+    const modal = document.getElementById('premium-features-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      
+      // Reset video if it's playing
+      const videoContainer = modal.querySelector('.video-container');
+      if (videoContainer) {
+        const iframe = videoContainer.querySelector('iframe');
+        if (iframe) {
+          videoContainer.innerHTML = `
+            <img src="https://img.youtube.com/vi/UVtrvArSihQ/maxresdefault.jpg" alt="Video Thumbnail" class="video-thumbnail">
+            <div class="play-overlay">
+              <div class="play-button">
+                <svg viewBox="0 0 24 24" fill="white" width="48" height="48">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+          `;
+        }
+      }
+    }
+  }
+
+  function playVideo(container) {
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('src', 'https://www.youtube.com/embed/UVtrvArSihQ?autoplay=1');
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.borderRadius = '15px';
+
+    container.innerHTML = '';
+    container.appendChild(iframe);
+  }
+
   function handlePurchase() {
     const email = document.getElementById('premium-email').value;
     if (!email || !email.includes('@')) {
       alert('Please enter a valid email address');
       return;
     }
+
+    // Store email in localStorage
+    localStorage.setItem('user_email', email);
 
     // Create Stripe session
     fetch('/create-checkout-session', {
@@ -300,6 +479,14 @@
       console.error('Error:', error);
       alert('Something went wrong. Please try again.');
     });
+  }
+
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    const modal = document.getElementById('premium-features-modal');
+    if (event.target == modal) {
+      closeModal();
+    }
   }
 </script>
 
