@@ -46,6 +46,8 @@ class AccountsController < ApplicationController
           password_confirmation: params[:password_confirmation],
           premium: true
         )
+        # Send welcome email for new users
+        UserMailer.with(user: user).welcome_email.deliver_later
       end
 
       # Sign in the user

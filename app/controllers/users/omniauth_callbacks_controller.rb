@@ -8,6 +8,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         session.delete(:checkout_email)
       end
 
+      # Send welcome email for new users
+      if @user.sign_in_count == 1
+        UserMailer.with(user: @user).welcome_email.deliver_later
+      end
+
       sign_in_and_redirect @user, event: :authentication
       set_flash_message(:notice, :success, kind: "Google") if is_navigational_format?
     else
