@@ -22,7 +22,7 @@ class BookmarksController < ApplicationController
   def destroy
     @bookmark = Bookmark.find_by(
       user_id: session[:user_id],
-      scholarship_id: params[:scholarship_id]
+      scholarship_id: params[:id]
     )
 
     if @bookmark&.destroy

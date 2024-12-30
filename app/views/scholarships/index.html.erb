@@ -3,7 +3,7 @@
   <div class="filter-groups">
     <% if session[:user_id] %>
       <button class="filter-btn" data-bookmarked="true">
-        ⭐️ Bookmarked
+        ⭐️ Bookmarked (<%= @bookmarked_count %>)
       </button>
     <% end %>
     <% Scholarship.tag_counts.each do |tag, count| %>
@@ -38,7 +38,7 @@
           <% if session[:user_id] %>
             <button class="bookmark-btn <%= 'active' if scholarship.bookmarks.exists?(user_id: session[:user_id]) %>" 
                     data-scholarship-id="<%= scholarship.id %>">
-              ★ <%= scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'Bookmarked' : 'Bookmark' %>
+              ⭐️ <%= scholarship.bookmarks.exists?(user_id: session[:user_id]) ? 'Bookmarked' : 'Bookmark' %>
             </button>
           <% end %>
           <a href="<%= scholarship.url %>" target="_blank" class="apply-btn">Learn More</a>
@@ -55,10 +55,52 @@
     const closeFiltersBtn = document.querySelector('.close-filters-btn');
     let activeFilters = new Set();
     let showBookmarkedOnly = false;
+    let bookmarkCount = <%= @bookmarked_count %>;
+    const bookmarkPill = document.querySelector('[data-bookmarked="true"]');
+
+    // Function to toggle bookmark
+    function toggleBookmark(button) {
+      const scholarshipId = button.dataset.scholarshipId;
+      const isBookmarked = button.classList.contains('active');
+      
+      const method = isBookmarked ? 'DELETE' : 'POST';
+      const url = isBookmarked ? `/bookmarks/${scholarshipId}` : '/bookmarks';
+      
+      fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+        },
+        body: !isBookmarked ? JSON.stringify({ scholarship_id: scholarshipId }) : null
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          button.classList.toggle('active');
+          button.textContent = isBookmarked ? '⭐️ Bookmark' : '⭐️ Bookmarked';
+          // Update the card's bookmarked status
+          button.closest('.scholarship-card').dataset.bookmarked = (!isBookmarked).toString();
+          // Update bookmark count
+          const bookmarkCount = parseInt(document.querySelector('[data-bookmarked="true"]').textContent.match(/\d+/)[0]) + (isBookmarked ? -1 : 1);
+          document.querySelector('[data-bookmarked="true"]').textContent = `⭐️ Bookmarked (${bookmarkCount})`;
+          // Re-run filters in case bookmarked filter is active
+          filterScholarships();
+        }
+      });
+    }
 
     filterButtons.forEach(button => {
       button.addEventListener('click', function() {
         if (this.dataset.bookmarked) {
+          if (showBookmarkedOnly) {
+            // If we're already showing bookmarks, clicking again will show all bookmarked cards
+            // and allow quick unbookmarking
+            const bookmarkedCards = document.querySelectorAll('.scholarship-card[data-bookmarked="true"]');
+            bookmarkedCards.forEach(card => {
+              card.style.display = 'block';
+            });
+          }
           showBookmarkedOnly = !showBookmarkedOnly;
           this.classList.toggle('active');
         } else {
@@ -97,33 +139,21 @@
 
     // Bookmark functionality
     document.querySelectorAll('.bookmark-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        const scholarshipId = this.dataset.scholarshipId;
-        const isBookmarked = this.classList.contains('active');
-        
-        const method = isBookmarked ? 'DELETE' : 'POST';
-        const url = isBookmarked ? `/bookmarks/${scholarshipId}` : '/bookmarks';
-        const body = isBookmarked ? null : JSON.stringify({ scholarship_id: scholarshipId });
-        
-        fetch(url, {
-          method: method,
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
-          },
-          body: body
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === 'success') {
-            this.classList.toggle('active');
-            this.textContent = isBookmarked ? '★ Bookmark' : '★ Bookmarked';
-            // Update the card's bookmarked status
-            this.closest('.scholarship-card').dataset.bookmarked = (!isBookmarked).toString();
-            // Re-run filters in case bookmarked filter is active
-            filterScholarships();
+      button.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent card click if we click the button
+        toggleBookmark(this);
+      });
+    });
+
+    // Add click handler to cards when bookmark filter is active
+    scholarshipCards.forEach(card => {
+      card.addEventListener('click', function(e) {
+        if (showBookmarkedOnly && card.dataset.bookmarked === 'true') {
+          const bookmarkBtn = card.querySelector('.bookmark-btn');
+          if (bookmarkBtn) {
+            toggleBookmark(bookmarkBtn);
           }
-        });
+        }
       });
     });
   });
