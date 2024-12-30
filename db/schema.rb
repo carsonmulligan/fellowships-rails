@@ -97,7 +97,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_30_044012) do
     t.string "provider"
     t.string "uid"
     t.string "google_token"
+    t.boolean "premium", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["premium"], name: "index_users_on_premium"
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
