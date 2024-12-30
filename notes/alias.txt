@@ -1,1 +1,1 @@
-git config --global alias.ai '!git add . && ai-commit && Y'
+git config --global alias.ai '!git add . && ai-commit
