@@ -6,7 +6,7 @@
 # One-step script to scaffold a Ruby on Rails 7.2.2 + Ruby 3.1.2 + PostgreSQL
 # + OmniAuth (Google) + Stripe for a single $99 payment flow.
 #
-# We'll call the project "f-rad" (F-Rad Fellowship).
+# We'll call the project "Fellowships4You❤️" (Fellowships4You❤️ Fellowship).
 #
 # What it does:
 #   1. Creates a new Rails 7.2.2 app with PostgreSQL, Ruby 3.1.2
@@ -30,12 +30,12 @@
 # │ (1) GET CLI INPUTS FOR CONFIG                                            │
 # └────────────────────────────────────────────────────────────────────────────┘
 echo "======================================================================"
-echo "  Welcome to F-Rad Fellowship Setup (Rails 7.2.2 + Ruby 3.1.2 + Postgres)"
+echo "  Welcome to Fellowships4You❤️ Fellowship Setup (Rails 7.2.2 + Ruby 3.1.2 + Postgres)"
 echo "======================================================================"
 echo ""
 
-read -p "Enter the project folder name (default 'f-rad'): " APP_NAME
-APP_NAME=${APP_NAME:-f-rad}
+read -p "Enter the project folder name (default 'Fellowships4You❤️'): " APP_NAME
+APP_NAME=${APP_NAME:-Fellowships4You❤️}
 
 read -p "Enter your local Postgres DB name (default 'f_rad_dev'): " DB_NAME
 DB_NAME=${DB_NAME:-f_rad_dev}
@@ -212,13 +212,13 @@ EOF
 # We'll just create minimal HTML views for them
 mkdir -p app/views/static_pages
 cat <<'EOF' > app/views/static_pages/landing.html.erb
-<h1>F-Rad Fellowship Planner</h1>
-<p>Welcome to F-Rad. Win major grad fellowships like Rhodes, etc. Long Scroll, multiple CTAs.</p>
+<h1>Fellowships4You❤️ Fellowship Planner</h1>
+<p>Welcome to Fellowships4You❤️. Win major grad fellowships like Rhodes, etc. Long Scroll, multiple CTAs.</p>
 <p><a href="/auth/google_oauth2">Sign in with Google</a> | <a href="/product">Buy $99</a></p>
 EOF
 
 cat <<'EOF' > app/views/static_pages/product.html.erb
-<h1>F-Rad Product Page</h1>
+<h1>Fellowships4You❤️ Product Page</h1>
 <p>Explore / Prepare / Execute modules. Payment => $99 One-time.</p>
 
 <%= form_with url: buy_path, local: true do %>
@@ -228,7 +228,7 @@ cat <<'EOF' > app/views/static_pages/product.html.erb
 EOF
 
 cat <<'EOF' > app/views/static_pages/home.html.erb
-<h1>F-Rad Home (Dashboard)</h1>
+<h1>Fellowships4You❤️ Home (Dashboard)</h1>
 <p>Congrats, you're recognized as paid or logged in. Access your fellowship tips here.</p>
 <ul>
   <li>Rhodes Scholarship</li>
@@ -262,7 +262,7 @@ class StripeController < ApplicationController
       line_items: [{
         price_data: {
           currency: 'usd',
-          product_data: { name: 'F-Rad Fellowship Access' },
+          product_data: { name: 'Fellowships4You❤️ Fellowship Access' },
           unit_amount: 9900,
         },
         quantity: 1
@@ -376,14 +376,14 @@ EOF
 
 cat <<'ASCII' >> README.md
 
-ASCII Wireframe for F-Rad (Ruby on Rails):
+ASCII Wireframe for Fellowships4You❤️ (Ruby on Rails):
 ------------------------------------------
 Landing Page (/) => sign in or buy => /product => create checkout => Stripe => 
 webhook => Payment => /home => see content.
 
    LANDING PAGE:
    ┌────────────────────────────────────────────────────────────────┐
-   │ F-Rad Fellowship Planner (multiple CTAs)                      │
+   │ Fellowships4You❤️ Fellowship Planner (multiple CTAs)                      │
    │   [Sign In w/ Google]  [Buy $99 => post /buy]                 │
    └────────────────────────────────────────────────────────────────┘
                     ↓
@@ -419,7 +419,7 @@ echo "Final db:migrate if needed..."
 rails db:migrate
 
 echo "--------------------------------------------------------------------"
-echo "Setup complete for Ruby on Rails (F-Rad) w/ local Postgres, OmniAuth Google, Stripe."
+echo "Setup complete for Ruby on Rails (Fellowships4You❤️) w/ local Postgres, OmniAuth Google, Stripe."
 echo ""
 echo "Next steps:"
 echo "1) cd $APP_NAME"
@@ -432,5 +432,5 @@ echo "   - Stripe webhook => /stripe/webhook"
 echo "   - OmniAuth callback => /auth/google_oauth2/callback"
 echo ""
 echo "Be sure to confirm 'payments' table creation and that your DB is running."
-echo "Add any advanced logic as needed. Enjoy your new F-Rad app!"
+echo "Add any advanced logic as needed. Enjoy your new Fellowships4You❤️ app!"
 echo "--------------------------------------------------------------------"

@@ -18,7 +18,7 @@ class StripeController < ApplicationController
       line_items: [{
         price_data: {
           currency: 'usd',
-          product_data: { name: 'F-Rad Fellowship Access' },
+          product_data: { name: 'Fellowships4You❤️ Fellowship Access' },
           unit_amount: 9900,
         },
         quantity: 1
