@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instructions>
+  <context>
+    We have Heroku build errors:
+    1) “Cannot write a changed lockfile while frozen” (Bundler in deployment/frozen mode).
+    2) “bin/rake: cannot execute: required file not found” (likely bad line endings / missing shebang).
+  </context>
+
+  <goal>
+    Fix Gemfile.lock for Heroku (remove/fix `BUNDLED WITH` or match Bundler 2.5.6),
+    confirm `bin/rake` is valid (shebang + LF endings), and successfully run `bundle exec rake -P`.
+  </goal>
+
+  <steps>
+    <step>Remove or update the “BUNDLED WITH” section in Gemfile.lock to match 2.5.6 or remove it entirely.</step>
+    <step>Unset bundler deployment locally: `bundle config unset deployment` & remove `vendor/bundle`.</step>
+    <step>Check `bin/rake`: ensure `#!/usr/bin/env ruby` at top, correct Rails binstub content, and LF line endings.</step>
+    <step>Run `bundle lock --add-platform x86_64-linux` if deploying to Linux from macOS/ARM.</step>
+    <step>Re-install or update lockfile: `bundle install` or `bundle update --ruby` and commit changes.</step>
+    <step>Push to Heroku again: `git push heroku main` and confirm logs show rake tasks detected.</step>
+  </steps>
+
+  <references>
+    <reference>Search “Could not detect rake tasks” + “bin/rake: cannot execute” for binstub/line-ending issues.</reference>
+    <reference>Search “Cannot write a changed lockfile while frozen” for Bundler deployment mode conflicts.</reference>
+  </references>
+  <logs>
+    <output>
+    (base) ➜  f-rad-v2 git:(prod_test) bundle exec rake app:update:bin 
+
+rake aborted!
+Don't know how to build task 'app:update:bin' (See the list of available tasks with `rake --tasks`)
+/Users/carsonmulligan/.rbenv/versions/3.1.2/bin/bundle:25:in `load'
+/Users/carsonmulligan/.rbenv/versions/3.1.2/bin/bundle:25:in `<main>'
+(See full trace by running task with --trace)
+(base) ➜  f-rad-v2 git:(prod_test) bundle binstubs bundler --force 
+bundle binstubs rake --force
+(base) ➜  f-rad-v2 git:(prod_test) ✗ brew install dos2unix    # if not installed
+dos2unix bin/*
+
+==> Auto-updating Homebrew...
+Adjust how often this is run with HOMEBREW_AUTO_UPDATE_SECS or disable with
+HOMEBREW_NO_AUTO_UPDATE. Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+==> Auto-updated Homebrew!
+Updated 1 tap (homebrew/core).
+==> New Formulae
+lol-html              pinact                showcert
+
+You have 27 outdated formulae and 1 outdated cask installed.
+
+Warning: dos2unix 7.5.2 is already installed and up-to-date.
+To reinstall 7.5.2, run:
+  brew reinstall dos2unix
+dos2unix: converting file bin/brakeman to Unix format...
+dos2unix: converting file bin/bundle to Unix format...
+dos2unix: converting file bin/docker-entrypoint to Unix format...
+dos2unix: converting file bin/rails to Unix format...
+dos2unix: converting file bin/rake to Unix format...
+dos2unix: converting file bin/rubocop to Unix format...
+dos2unix: converting file bin/setup to Unix format...
+(base) ➜  f-rad-v2 git:(prod_test) ✗ git add Gemfile Gemfile.lock bin/rake bin/rails
+git commit -m "Fix Ruby version and binstubs"
+git push heroku main
+
+[prod_test 7f66e51] Fix Ruby version and binstubs
+ 1 file changed, 27 insertions(+), 4 deletions(-)
+Enumerating objects: 899, done.
+Counting objects: 100% (899/899), done.
+Delta compression using up to 14 threads
+Compressing objects: 100% (858/858), done.
+Writing objects: 100% (899/899), 195.71 KiB | 8.15 MiB/s, done.
+Total 899 (delta 516), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (516/516), done.
+remote: Updated 160 paths from 43397d7
+remote: Compressing source files... done.
+remote: Building source:
+remote: 
+remote: -----> Building on the Heroku-24 stack
+remote: -----> Using buildpack: heroku/ruby
+remote: -----> Ruby app detected
+remote: -----> Installing bundler 2.5.6
+remote: -----> Removing BUNDLED WITH version in the Gemfile.lock
+remote: -----> Compiling Ruby/Rails
+remote: -----> Using Ruby version: ruby-3.1.2
+remote: -----> Installing dependencies using bundler 2.5.6
+remote:        Running: BUNDLE_WITHOUT='development:test' BUNDLE_PATH=vendor/bundle BUNDLE_BIN=vendor/bundle/bin BUNDLE_DEPLOYMENT=1 bundle install -j4
+remote:        Fetching gem metadata from https://rubygems.org/........
+remote:        Fetching rake 13.2.1
+remote:        Installing rake 13.2.1
+remote:        Fetching base64 0.2.0
+remote:        Fetching benchmark 0.4.0
+remote:        Fetching bigdecimal 3.1.9
+remote:        Fetching concurrent-ruby 1.3.4
+remote:        Installing base64 0.2.0
+remote:        Installing benchmark 0.4.0
+remote:        Fetching connection_pool 2.4.1
+remote:        Installing bigdecimal 3.1.9 with native extensions
+remote:        Installing connection_pool 2.4.1
+remote:        Fetching drb 2.2.1
+remote:        Fetching logger 1.6.4
+remote:        Installing drb 2.2.1
+remote:        Installing logger 1.6.4
+remote:        Fetching minitest 5.25.4
+remote:        Installing concurrent-ruby 1.3.4
+remote:        Fetching securerandom 0.4.1
+remote:        Installing minitest 5.25.4
+remote:        Installing securerandom 0.4.1
+remote:        Fetching builder 3.3.0
+remote:        Installing builder 3.3.0
+remote:        Fetching erubi 1.13.1
+remote:        Fetching racc 1.8.1
+remote:        Installing erubi 1.13.1
+remote:        Fetching crass 1.0.6
+remote:        Fetching rack 3.1.8
+remote:        Installing racc 1.8.1 with native extensions
+remote:        Installing crass 1.0.6
+remote:        Fetching useragent 0.16.11
+remote:        Installing rack 3.1.8
+remote:        Installing useragent 0.16.11
+remote:        Fetching nio4r 2.7.4
+remote:        Fetching websocket-extensions 0.1.5
+remote:        Installing websocket-extensions 0.1.5
+remote:        Fetching zeitwerk 2.6.18
+remote:        Installing nio4r 2.7.4 with native extensions
+remote:        Installing zeitwerk 2.6.18
+remote:        Fetching timeout 0.4.3
+remote:        Installing timeout 0.4.3
+remote:        Fetching marcel 1.0.4
+remote:        Installing marcel 1.0.4
+remote:        Fetching mini_mime 1.1.5
+remote:        Installing mini_mime 1.1.5
+remote:        Fetching date 3.4.1
+remote:        Installing date 3.4.1 with native extensions
+remote:        Fetching bcrypt 3.1.20
+remote:        Installing bcrypt 3.1.20 with native extensions
+remote:        Fetching msgpack 1.7.5
+remote:        Installing msgpack 1.7.5 with native extensions
+remote:        Fetching orm_adapter 0.5.0
+remote:        Installing orm_adapter 0.5.0
+remote:        Fetching stringio 3.1.2
+remote:        Installing stringio 3.1.2 with native extensions
+remote:        Fetching io-console 0.8.0
+remote:        Installing io-console 0.8.0 with native extensions
+remote:        Fetching thor 1.3.2
+remote:        Installing thor 1.3.2
+remote:        Fetching uri 1.0.2
+remote:        Installing uri 1.0.2
+remote:        Fetching json 2.9.1
+remote:        Installing json 2.9.1 with native extensions
+remote:        Fetching hashie 5.0.0
+remote:        Installing hashie 5.0.0
+remote:        Fetching version_gem 1.1.4
+remote:        Installing version_gem 1.1.4
+remote:        Fetching pg 1.5.9
+remote:        Installing pg 1.5.9 with native extensions
+remote:        Fetching stripe 13.3.0
+remote:        Installing stripe 13.3.0
+remote:        Fetching jwt 2.10.1
+remote:        Installing jwt 2.10.1
+remote:        Fetching i18n 1.14.6
+remote:        Installing i18n 1.14.6
+remote:        Fetching tzinfo 2.0.6
+remote:        Installing tzinfo 2.0.6
+remote:        Fetching rack-session 2.0.0
+remote:        Installing rack-session 2.0.0
+remote:        Fetching rack-test 2.2.0
+remote:        Installing rack-test 2.2.0
+remote:        Fetching rackup 2.2.1
+remote:        Installing rackup 2.2.1
+remote:        Fetching warden 1.2.9
+remote:        Installing warden 1.2.9
+remote:        Fetching rack-protection 4.1.1
+remote:        Installing rack-protection 4.1.1
+remote:        Fetching sprockets 4.2.1
+remote:        Installing sprockets 4.2.1
+remote:        Fetching websocket-driver 0.7.6
+remote:        Installing websocket-driver 0.7.6 with native extensions
+remote:        Fetching net-protocol 0.2.2
+remote:        Installing net-protocol 0.2.2
+remote:        Fetching nokogiri 1.15.7 (x86_64-linux)
+remote:        Installing nokogiri 1.15.7 (x86_64-linux)
+remote:        Fetching puma 6.5.0
+remote:        Installing puma 6.5.0 with native extensions
+remote:        Fetching bootsnap 1.18.4
+remote:        Installing bootsnap 1.18.4 with native extensions
+remote:        Fetching net-http 0.6.0
+remote:        Installing net-http 0.6.0
+remote:        Fetching reline 0.6.0
+remote:        Installing reline 0.6.0
+remote:        Fetching snaky_hash 2.0.1
+remote:        Installing snaky_hash 2.0.1
+remote:        Fetching psych 5.2.2
+remote:        Installing psych 5.2.2 with native extensions
+remote:        Fetching omniauth 2.1.2
+remote:        Installing omniauth 2.1.2
+remote:        Fetching net-imap 0.5.4
+remote:        Installing net-imap 0.5.4
+remote:        Fetching net-pop 0.1.2
+remote:        Installing net-pop 0.1.2
+remote:        Fetching net-smtp 0.5.0
+remote:        Installing net-smtp 0.5.0
+remote:        Fetching loofah 2.23.1
+remote:        Installing loofah 2.23.1
+remote:        Fetching activesupport 7.2.2.1
+remote:        Installing activesupport 7.2.2.1
+remote:        Fetching multi_xml 0.7.1
+remote:        Installing multi_xml 0.7.1
+remote:        Fetching faraday-net_http 3.4.0
+remote:        Installing faraday-net_http 3.4.0
+remote:        Fetching mail 2.8.1
+remote:        Installing mail 2.8.1
+remote:        Fetching rails-html-sanitizer 1.6.2
+remote:        Installing rails-html-sanitizer 1.6.2
+remote:        Fetching rails-dom-testing 2.2.0
+remote:        Installing rails-dom-testing 2.2.0
+remote:        Fetching globalid 1.2.1
+remote:        Installing globalid 1.2.1
+remote:        Fetching activemodel 7.2.2.1
+remote:        Installing activemodel 7.2.2.1
+remote:        Fetching faraday 2.12.2
+remote:        Installing faraday 2.12.2
+remote:        Fetching actionview 7.2.2.1
+remote:        Installing actionview 7.2.2.1
+remote:        Fetching activejob 7.2.2.1
+remote:        Installing activejob 7.2.2.1
+remote:        Fetching activerecord 7.2.2.1
+remote:        Installing activerecord 7.2.2.1
+remote:        Fetching oauth2 2.0.9
+remote:        Installing oauth2 2.0.9
+remote:        Fetching actionpack 7.2.2.1
+remote:        Installing actionpack 7.2.2.1
+remote:        Fetching jbuilder 2.13.0
+remote:        Installing jbuilder 2.13.0
+remote:        Fetching acts-as-taggable-on 11.0.0
+remote:        Installing acts-as-taggable-on 11.0.0
+remote:        Fetching omniauth-oauth2 1.8.0
+remote:        Installing omniauth-oauth2 1.8.0
+remote:        Fetching actioncable 7.2.2.1
+remote:        Installing actioncable 7.2.2.1
+remote:        Fetching activestorage 7.2.2.1
+remote:        Installing activestorage 7.2.2.1
+remote:        Fetching actionmailer 7.2.2.1
+remote:        Installing actionmailer 7.2.2.1
+remote:        Fetching omniauth-rails_csrf_protection 1.0.2
+remote:        Installing omniauth-rails_csrf_protection 1.0.2
+remote:        Fetching sprockets-rails 3.5.2
+remote:        Installing sprockets-rails 3.5.2
+remote:        Fetching omniauth-google-oauth2 1.2.0
+remote:        Installing omniauth-google-oauth2 1.2.0
+remote:        Fetching actionmailbox 7.2.2.1
+remote:        Installing actionmailbox 7.2.2.1
+remote:        Fetching actiontext 7.2.2.1
+remote:        Installing actiontext 7.2.2.1
+remote:        Fetching rdoc 6.10.0
+remote:        Installing rdoc 6.10.0
+remote:        Fetching irb 1.14.3
+remote:        Installing irb 1.14.3
+remote:        Fetching railties 7.2.2.1
+remote:        Installing railties 7.2.2.1
+remote:        Fetching responders 3.1.1
+remote:        Fetching importmap-rails 2.1.0
+remote:        Installing responders 3.1.1
+remote:        Installing importmap-rails 2.1.0
+remote:        Fetching rails 7.2.2.1
+remote:        Fetching stimulus-rails 1.3.4
+remote:        Installing rails 7.2.2.1
+remote:        Fetching turbo-rails 2.0.11
+remote:        Installing stimulus-rails 1.3.4
+remote:        Fetching devise 4.9.4
+remote:        Installing turbo-rails 2.0.11
+remote:        Installing devise 4.9.4
+remote:        Cannot write a changed lockfile while frozen.
+remote:        Bundle complete! 21 Gemfile dependencies, 93 gems now installed.
+remote:        Gems in the groups 'development' and 'test' were not installed.
+remote:        Bundled gems are installed into `./vendor/bundle`
+remote:        Post-install message from i18n:
+remote:        PSA: I18n will be dropping support for Ruby < 3.2 in the next major release (April 2025), due to Ruby's end of life for 3.1 and below (https://endoflife.date/ruby). Please upgrade to Ruby 3.2 or newer by April 2025 to continue using future versions of this gem.
+remote:        Post-install message from devise:
+remote:        
+remote:        [DEVISE] Please review the [changelog] and [upgrade guide] for more info on Hotwire / Turbo integration.
+remote:        
+remote:          [changelog] https://github.com/heartcombo/devise/blob/main/CHANGELOG.md
+remote:          [upgrade guide] https://github.com/heartcombo/devise/wiki/How-To:-Upgrade-to-Devise-4.9.0-%5BHotwire-Turbo-integration%5D
+remote:          Post-install message from oauth2:
+remote:        
+remote:        You have installed oauth2 version 2.0.9, congratulations!
+remote:        
+remote:        There are BREAKING changes if you are upgrading from < v2, but most will not encounter them, and updating your code should be easy!
+remote:        
+remote:        We have made two other major migrations:
+remote:        1. master branch renamed to main
+remote:        2. Github has been replaced with Gitlab
+remote:        
+remote:        Please see:
+remote:        • https://gitlab.com/oauth-xx/oauth2#what-is-new-for-v20
+remote:        • https://gitlab.com/oauth-xx/oauth2/-/blob/main/CHANGELOG.md
+remote:        • https://groups.google.com/g/oauth-ruby/c/QA_dtrXWXaE
+remote:        
+remote:        Please report issues, and support the project! Thanks, |7eter l-|. l3oling
+remote:        
+remote:        Bundle completed (18.51s)
+remote:        Cleaning up the bundler cache.
+remote: -----> Detecting rake tasks
+remote: 
+remote:  !
+remote:  !     Could not detect rake tasks
+remote:  !     ensure you can run `$ bundle exec rake -P` against your app
+remote:  !     and using the production group of your Gemfile.
+remote:  !     bash: line 1: /tmp/build_129bed32/bin/rake: cannot execute: required file not found
+remote:  !
+remote: /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/helpers/rake_runner.rb:100:in `load_rake_tasks!': Could not detect rake tasks (LanguagePack::Helpers::RakeRunner::CannotLoadRakefileError)
+remote: ensure you can run `$ bundle exec rake -P` against your app
+remote: and using the production group of your Gemfile.
+remote: bash: line 1: /tmp/build_129bed32/bin/rake: cannot execute: required file not found
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/ruby.rb:909:in `rake'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/rails4.rb:69:in `block in run_assets_precompile_rake_task'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/base.rb:144:in `log'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/rails4.rb:63:in `run_assets_precompile_rake_task'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/ruby.rb:97:in `block in compile'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/ruby.rb:930:in `allow_git'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/ruby.rb:90:in `compile'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/rails2.rb:55:in `compile'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/rails3.rb:37:in `compile'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/rails4.rb:30:in `compile'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/rails6.rb:17:in `compile'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/bin/support/ruby_compile:19:in `block in <main>'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/lib/language_pack/base.rb:144:in `log'
+remote:         from /tmp/codon/tmp/buildpacks/50d5eddf222a9b7326028041d4e6509f915ccf2c/bin/support/ruby_compile:18:in `<main>'
+remote:  !     Push rejected, failed to compile Ruby app.
+remote: 
+remote:  !     Push failed
+remote:  !
+remote:  ! ## Warning - The same version of this code has already been built: 15baa6a622ae2b499396c1ea33d8d18b0400df1a
+remote:  !
+remote:  ! We have detected that you have triggered a build from source code with version 15baa6a622ae2b499396c1ea33d8d18b0400df1a
+remote:  ! at least twice. One common cause of this behavior is attempting to deploy code from a different branch.
+remote:  !
+remote:  ! If you are developing on a branch and deploying via git you must run:
+remote:  !
+remote:  !     git push heroku <branchname>:main
+remote:  !
+remote:  ! This article goes into details on the behavior:
+remote:  !   https://devcenter.heroku.com/articles/duplicate-build-version
+remote: 
+remote: Verifying deploy...
+remote: 
+remote: !       Push rejected to f-rad-v2.
+remote: 
+To https://git.heroku.com/f-rad-v2.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'https://git.heroku.com/f-rad-v2.git'
+(base) ➜  f-rad-v2 git:(prod_test) 
+    
+    </output>
+  </logs>
+</instructions>
