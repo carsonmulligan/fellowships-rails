@@ -1,0 +1,1 @@
+> when i was looking for scholarhsips it was an intensely addicting progress -- i would get up early early in the morning and search for niche scholarships and apply. i did win one of these scholarships from a company called PCB Solutions. it was a small scholarhship but scholarships are about momentum. getting good grades your first semester is very important. 
