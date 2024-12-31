@@ -2,7 +2,8 @@ class StripeController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:webhook]
 
   require 'stripe'
-  require 'dotenv/load'  # So we can read STRIPE_SECRET_KEY, etc.
+  # Initialize Stripe with the secret key from environment variables
+  Stripe.api_key = ENV['STRIPE_SECRET_KEY']
 
   # For local usage, we can create "buy" action that sets up a Stripe Checkout
   def buy
@@ -10,8 +11,6 @@ class StripeController < ApplicationController
     unless session[:user_id]
       return redirect_to user_google_oauth2_omniauth_authorize_path, notice: "Please sign in first"
     end
-
-    Stripe.api_key = ENV['STRIPE_SECRET_KEY']
 
     checkout_session = Stripe::Checkout::Session.create(
       payment_method_types: ['card'],
