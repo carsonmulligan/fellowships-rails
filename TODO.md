@@ -2,6 +2,15 @@
 
 2. fix the pills so you can still read them when you hover over them 
   
+> thinking -- now that this app can show fellowships all in one place and asks you to sign in if you want to bookmark, what are the other things that would convince me that it was worth it to pay $119 for a lifetime membership when i was a sophomore in college? well first i paid more for an LSAT prep course that was a little scammy i felt but worked okay. it had a structured outline and curriculum. the reward of getting a top LSAT score bajes in the price of a great law school, a great career, and the promise of financial aid if in the top echelon of scorers. 
+
+> with graduate fellowships it feels more like going to the casino and having fun. on one hand you can play the slots and apply for lots of small scholarships. this is good as it brings in money and gets you creds. this involves inputting your university, major, and other information in order to grep the internet and pull scholarships that you can apply for. -- then going the extra mile bys tarting to pull together the starting materials for your application. 
+
+> for instance, i input that i am a sophomore at oklahoma state university studying economics and chinese. the system then dumps info for me in a structured way on who has won before, where i can read example winning essays, starting outlines for winning essays, notes, youtube links, and more. 
+
+> this is what i will do. i will make a folder for individual fellowships and input the information cheatsheet on each one manually, then show an llm how to generate cheat sheets for others. then users can show up, have the low down, input their own info, generate a skeleton app, and send off to a trusted advisor or friend for comments / review. 
+
+
 
 
 
