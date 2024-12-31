@@ -1,3 +1,10 @@
+1. fix bookmarked issue. for instance, when in the pill filtering bar if you select bookmarks to see the ones you have, you can deselct the bookmarks pill filter. 
+
+2. fix the pills so you can still read them when you hover over them 
+  
+
+
+
 > Add product page outlining course features and pricing
 
 > add bookmarks
