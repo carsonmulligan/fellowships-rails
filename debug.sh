@@ -43,10 +43,6 @@
   heroku run rake db:migrate
   echo
 
-  echo "===== (8) Checking Heroku config ====="
-  heroku config
-  echo
-
   echo "===== (9) Checking local Ruby version ====="
   ruby -v
   echo
