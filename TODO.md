@@ -10,7 +10,7 @@
 
 > this is what i will do. i will make a folder for individual fellowships and input the information cheatsheet on each one manually, then show an llm how to generate cheat sheets for others. then users can show up, have the low down, input their own info, generate a skeleton app, and send off to a trusted advisor or friend for comments / review. 
 
-
+> thought -- allow users to leave anonymous comments on each scholarship. 
 
 
 
