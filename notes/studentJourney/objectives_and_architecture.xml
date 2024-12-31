@@ -1,21 +1,167 @@
 <response>
+    <!-- 
+      The following XML files describe:
+      1) instructions.xml: Code style and structure guidelines for building
+         this Ruby on Rails, Hotwire, and Tailwind CSS application.
+      2) objectives.xml: High-level objectives for the scholarship platform.
+      3) architecture.xml: The app’s layered structure, data flow, and deployment.
+      4) user-journey.xml: Stages in the user journey from sign-up to submission. 
+    -->
+
+    <instructionsFile name="instructions.xml">
+        <instructions>
+            <section title="Code Style and Structure">
+                <point>
+                    Write concise, idiomatic Ruby code with accurate examples.
+                </point>
+                <point>
+                    Follow Rails conventions and best practices.
+                </point>
+                <point>
+                    Use object-oriented and functional programming patterns as appropriate.
+                </point>
+                <point>
+                    Prefer iteration and modularization over code duplication.
+                </point>
+                <point>
+                    Use descriptive variable and method names (e.g., user_signed_in?, calculate_total).
+                </point>
+                <point>
+                    Structure files according to Rails MVC, concerns, helpers, etc.
+                </point>
+            </section>
+            <section title="Naming Conventions">
+                <point>
+                    Use snake_case for file names, method names, and variables.
+                </point>
+                <point>
+                    Use CamelCase for class and module names.
+                </point>
+                <point>
+                    Follow Rails naming conventions for models, controllers, and views.
+                </point>
+            </section>
+            <section title="Ruby and Rails Usage">
+                <point>
+                    Use Ruby 3.1.2 features where appropriate (pattern matching, endless methods).
+                </point>
+                <point>
+                    Leverage Rails 7.2.2 built-in helpers and methods.
+                </point>
+                <point>
+                    Use ActiveRecord effectively for database operations.
+                </point>
+            </section>
+            <section title="Syntax and Formatting">
+                <point>
+                    Follow the Ruby Style Guide (https://rubystyle.guide/).
+                </point>
+                <point>
+                    Use Ruby's expressive syntax (e.g., unless, ||=, &.).
+                </point>
+                <point>
+                    Prefer single quotes for strings unless interpolation is needed.
+                </point>
+            </section>
+            <section title="Error Handling and Validation">
+                <point>
+                    Use exceptions for exceptional cases, not for control flow.
+                </point>
+                <point>
+                    Implement proper error logging and user-friendly messages.
+                </point>
+                <point>
+                    Use ActiveModel validations in models.
+                </point>
+                <point>
+                    Handle errors gracefully in controllers and display flash messages.
+                </point>
+            </section>
+            <section title="UI and Styling">
+                <point>
+                    Use Hotwire (Turbo and Stimulus) for dynamic, SPA-like interactions.
+                </point>
+                <point>
+                    Implement responsive design with Tailwind CSS.
+                </point>
+                <point>
+                    Use Rails view helpers and partials to keep views DRY.
+                </point>
+            </section>
+            <section title="Performance Optimization">
+                <point>
+                    Use database indexing effectively.
+                </point>
+                <point>
+                    Implement caching strategies (fragment caching, Russian Doll caching).
+                </point>
+                <point>
+                    Use eager loading to avoid N+1 queries (e.g., includes).
+                </point>
+                <point>
+                    Optimize queries using joins, select, etc.
+                </point>
+            </section>
+            <section title="Key Conventions">
+                <point>
+                    Follow RESTful routing conventions.
+                </point>
+                <point>
+                    Use concerns for shared behavior across models or controllers.
+                </point>
+                <point>
+                    Implement service objects for complex business logic.
+                </point>
+                <point>
+                    Use background jobs (Sidekiq) for time-consuming tasks.
+                </point>
+            </section>
+            <section title="Testing">
+                <point>
+                    Write comprehensive tests using RSpec or Minitest.
+                </point>
+                <point>
+                    Follow TDD/BDD practices where possible.
+                </point>
+                <point>
+                    Use factories (FactoryBot) for test data generation.
+                </point>
+            </section>
+            <section title="Security">
+                <point>
+                    Implement proper authentication and authorization (Devise, Pundit).
+                </point>
+                <point>
+                    Use strong parameters in controllers.
+                </point>
+                <point>
+                    Protect against XSS, CSRF, and SQL injection vulnerabilities.
+                </point>
+            </section>
+        </instructions>
+    </instructionsFile>
+
     <objectivesFile name="objectives.xml">
         <objectives>
             <objective>
-                Provide an intuitive, user-friendly platform where students can
-                search, save, and apply for scholarships.
+                Build a subscription-based platform (e.g., $20/month) that helps
+                students find, organize, and apply for scholarships and fellowships.
             </objective>
             <objective>
-                Integrate LLM assistance (GPT-4-mini) for drafting and refining
-                scholarship essays.
+                Foster a sense of momentum through personalized tracking,
+                success stories, and iterative application support.
             </objective>
             <objective>
-                Track user progress, deadlines, and application statuses to
-                maintain momentum and encourage repeated engagement.
+                Provide an LLM-powered essay feedback system (GPT-4-mini)
+                to assist users with personal statements and application materials.
             </objective>
             <objective>
-                Build a community-oriented space for shared scholarship tips
-                and peer support.
+                Create an engaging platform that showcases real stories of students
+                winning scholarships and fellowships, inspiring new applicants.
+            </objective>
+            <objective>
+                Demonstrate ROI via weekly or monthly crawls/emails of new scholarship
+                opportunities, a custom plan builder, and fellowship “chatbots.”
             </objective>
         </objectives>
     </objectivesFile>
@@ -24,56 +170,58 @@
         <architecture>
             <layers>
                 <layer>
-                    <name>Frontend</name>
+                    <name>Frontend (Rails + Hotwire + Tailwind)</name>
                     <description>
-                        Rails views or React-based UI for searching scholarships,
-                        managing applications, and drafting essays.
+                        Provides UI for sign-up, subscription, scholarship search,
+                        essay drafting, and real-time interactions via Turbo Streams.
                     </description>
                 </layer>
                 <layer>
-                    <name>Backend</name>
+                    <name>Backend (Rails 7.2.2 & Ruby 3.1.2)</name>
                     <description>
-                        Rails 7.2.2 + Ruby 3.1.2 application providing RESTful
-                        endpoints, database models (Scholarships, Users, Essays),
-                        and user authentication.
+                        Hosts the application logic, RESTful routes, user management,
+                        subscription tracking, scholarship crawling, and AI integration.
                     </description>
                 </layer>
                 <layer>
-                    <name>AIIntegration</name>
+                    <name>AI Integration (GPT-4-mini)</name>
                     <description>
-                        GPT-4-mini endpoint for generating essay feedback and
-                        suggestions. The Rails service layer communicates with
-                        GPT-4-mini.
+                        Processes essay drafts, returns feedback, and offers
+                        fellowship Q&A. Communicated via HTTP or RPC from Rails.
                     </description>
                 </layer>
                 <layer>
-                    <name>Database</name>
+                    <name>Database (PostgreSQL)</name>
                     <description>
-                        PostgreSQL storing scholarship info, user data,
-                        essay drafts, and GPT feedback logs.
+                        Stores users, scholarships, essay drafts, chat logs, and
+                        subscription data. Includes indexing, caching, and robust
+                        search capabilities.
+                    </description>
+                </layer>
+                <layer>
+                    <name>Background Jobs</name>
+                    <description>
+                        Sidekiq (or similar) handles periodic scholarship crawls,
+                        batch email notifications, and async AI calls if necessary.
                     </description>
                 </layer>
             </layers>
             <dataFlow>
-                <step>
-                    User enters essay text on Frontend → Rails Backend
-                </step>
-                <step>
-                    Rails requests GPT-4-mini feedback → AIIntegration
-                </step>
-                <step>
-                    GPT-4-mini returns suggestions → Rails → Frontend
-                </step>
-                <step>
-                    User data saved in PostgreSQL → available for future retrieval
-                </step>
+                <step>1. User signs up, enters profile/interests → stored in DB</step>
+                <step>2. Subscription payments processed (Stripe or other gateway)</step>
+                <step>3. Scholarship crawler updates DB → weekly/daily basis</step>
+                <step>4. User requests essay feedback → Rails sends draft to GPT-4-mini</step>
+                <step>5. GPT-4-mini returns feedback → stored/logged → displayed to user</step>
+                <step>6. Email notifications (upcoming deadlines) → scheduled with background job</step>
             </dataFlow>
             <deployment>
-                <platform>Heroku or AWS</platform>
+                <platform>
+                    Heroku / AWS (container-based) recommended for scaling
+                </platform>
                 <notes>
-                    Ensure environment variables for GPT-4-mini integration,
-                    secure connections (HTTPS), and scale using horizontal
-                    or vertical approaches as user base grows.
+                    - Ensure environment variables for AI endpoints
+                    - Use SSL / HTTPS for user data protection
+                    - Implement horizontal scaling (web dynos) for high traffic
                 </notes>
             </deployment>
         </architecture>
@@ -83,47 +231,58 @@
         <userJourney>
             <stage name="LandingPage">
                 <description>
-                    User sees main welcome screen with calls to action:
-                    Sign Up or Login.
+                    Users see calls-to-action, success stories, subscription prompt.
+                    Inspired by the idea of 'momentum' in scholarship searching.
                 </description>
             </stage>
-            <stage name="SignUpLogin">
+            <stage name="SubscriptionSignup">
                 <description>
-                    User creates an account with email and password
-                    or logs into an existing one.
+                    Users create accounts, choose a $20/month plan for advanced
+                    features (weekly scholarship crawl, custom plan, etc.).
+                </description>
+            </stage>
+            <stage name="ProfileSetup">
+                <description>
+                    Users enter personal data (interests, major, year), forming
+                    the basis for personalized scholarship recommendations.
                 </description>
             </stage>
             <stage name="Dashboard">
                 <description>
-                    User sees an overview of progress, recommended scholarships,
-                    upcoming deadlines, and can navigate to search or saved
-                    scholarships.
+                    Displays upcoming deadlines, recent crawled scholarships,
+                    momentum stats ($ awarded, apps in progress).
                 </description>
             </stage>
             <stage name="ScholarshipSearch">
                 <description>
-                    User inputs search criteria, sees a list of relevant
-                    scholarships, can save or view more details.
+                    User searches or browses curated scholarships/fellowships.
+                    Weekly crawls email top matches to subscribers.
                 </description>
             </stage>
-            <stage name="ScholarshipDetail">
+            <stage name="FellowshipChat">
                 <description>
-                    User learns about a specific scholarship's requirements
-                    and can add it to their list or begin the application
-                    essay.
+                    Users “chat” with specialized GPT modules about specific
+                    fellowships (Truman, Rhodes, Yenching), returning deadlines,
+                    requirements, plus a suggested plan with revision cycles.
                 </description>
             </stage>
-            <stage name="EssayDrafting">
+            <stage name="EssayDraftingAndFeedback">
                 <description>
-                    User writes or pastes an essay draft, requests GPT-4-mini
-                    feedback, and iterates on the content until satisfied.
+                    Users iterate on essay drafts with GPT-4-mini feedback. They
+                    schedule professor or mentor reviews, track multiple drafts,
+                    and refine final submissions.
                 </description>
             </stage>
-            <stage name="SubmissionTracking">
+            <stage name="ApplicationSubmission">
                 <description>
-                    User finalizes application, tracks deadlines, checks
-                    status, and sees overall progress toward scholarship
-                    funding goals.
+                    Once deadlines approach, users finalize applications, submit,
+                    and see a celebratory “momentum” update. Encourages next steps.
+                </description>
+            </stage>
+            <stage name="OngoingSupport">
+                <description>
+                    Users remain subscribed for continuous scholarship updates,
+                    new fellowship leads, and extended essay revision services.
                 </description>
             </stage>
         </userJourney>
