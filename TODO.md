@@ -12,6 +12,7 @@
 
 > thought -- allow users to leave anonymous comments on each scholarship. 
 
+> thought -- add in openai gpt 4o mini chat interface (if so, consider changing to $100 a year subscription or maybe 20 bucks a month)
 
 
 > Add product page outlining course features and pricing
